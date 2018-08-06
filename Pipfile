@@ -11,7 +11,7 @@ cython = "*"
 [dev-packages]
 pylama = "*"
 mypy = "*"
-"autopep8" = "*"
+pipenv = "*"
 pyinstaller = "*"
 pytest = "*"
 coverage = "*"
