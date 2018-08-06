@@ -1,6 +1,9 @@
 import time
 import os
 import json
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
+import aiofiles
 
 import tkinter as tk
 from tkinter.filedialog import askdirectory, askopenfilename, askopenfilenames
@@ -11,35 +14,43 @@ from typing import List, cast# ,Union, override, get_type_hints
 # from typing import Optional as Opt
 from dmlechemmods.types import simpDict,  pathType  # , Num, simpTypes, simpList, compList, compDict,
 
-from dmlechemmods import somecython, mung, plot
+from dml_async import somecython, mung, plot
 
 
-def open_mung_save(data_dir: pathType, output_dir: pathType = None) -> None:
+async def get_filelist(data_dir: pathType):
+    loop = asyncio.get_event_loop()
+    executor = ThreadPoolExecutor(max_workers=10)
+    fut = loop.run_in_executor(executor, os.listdir, data_dir)
+    yield fut
+
+
+async def open_mung_save(data_dir: pathType, output_dir: pathType = None) -> None:
+
     mung_time = time.perf_counter()
     num_files = len([fily for fily in os.listdir(data_dir)
                      if fily.endswith((".txt", ".csv", ".tsv"))])
-    print(f"{num_files} found in {data_dir}. Munging data  ...")
+    print(f"{num_files} found in {data_dir}. Munging data  ....")
 
     if not output_dir:
         output_dir = f"{data_dir}/output"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    for filename in os.listdir(data_dir):
-        cv_file = mung.open_file_numpy(data_dir, filename)
+    async for filename in get_filelist(data_dir):
+        print(filename)
+        cv_file = await mung.async_open_file_numpy(data_dir, filename)
         if cv_file is not None:
-            data = mung.get_data_numpy(cv_file)
-            params = mung.get_params(filename)
+            data = await mung.get_data_numpy(cv_file)
+            params = await mung.get_params(filename)
             if data is not None and len(data) == 2:
                 (x_var, y_var) = data
                 plot.make_cv_plot(x_var, y_var, params, output_dir)
             elif data is not None and len(data) == 5:
-                mung.write_imp_data(data, params, output_dir)
-                mung.write_zview_data(data, params, output_dir)
+                await mung.write_imp_data(data, params, output_dir)
+                await mung.write_zview_data(data, params, output_dir)
                 (freq_log, imped_log, phase, imag_imped, real_imped) = data
                 plot.make_bode_plot(freq_log, imped_log, phase, params, output_dir)
                 plot.make_nyquist_plot(imag_imped, real_imped, params, output_dir)
-
 
     finish_time = round(time.perf_counter() - mung_time)
     if num_files > 0:
@@ -101,7 +112,8 @@ class Application(ttk.Frame):
 
         self.goButton = ttk.Button(self.master,
                                    text='Go',
-                                   command=lambda: open_mung_save(self.data_dir))
+                                   command=self.mung_loop,
+        )
         self.goButton.grid(row=4, column=3)
 
         self.quitButton = ttk.Button(self.master,
@@ -110,13 +122,26 @@ class Application(ttk.Frame):
         )
         self.quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10)
 
+
+    def mung_loop(self):
+        #executor = ThreadPoolExecutor(max_workers=10)
+        loop = asyncio.get_event_loop()
+        try:
+            loop.run_until_complete(open_mung_save(self.data_dir))
+        except Exception as e:
+            print(e)
+        #fut = loop.run_in_executor(executor, open_mung_save, self.data_dir)
+        # loop.close()
+        # reveal_type(fut)
+        # return fut
+
     def get_datapath(self) -> None:
         # new_data_dir: pathType = askdirectory(title='Select data folder')
         filetypes = [('All files', '*.*'), ('CSV files',
                                             '*.csv'), ('Text files', 'txt.*'), ]
         new_data_list: List[pathType] = askopenfilenames(
             title='Select data folder', filetypes=filetypes)
-        if new_data_list:
+        if new_data_list is not None:
             new_data_file: pathType = new_data_list[0]
             # directory = os.path.dirname(os.path.realpath(tkFileDialog.askopenfilename()))
             new_data_dir: pathType = cast(
