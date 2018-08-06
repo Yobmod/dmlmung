@@ -1,40 +1,34 @@
 import numpy as np
 import csv
 # cimport cython
-from typing import Tuple, Any
+from typing import Tuple, NamedTuple
 from typing import Optional as Opt
-from dmlechemmods.types import pathType
+from dml_thread.types import pathType
 
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
-import aiofiles
+paramsTup = NamedTuple('paramsTup', [
+        ('filename_strip', str),
+        ('solv', str),
+        ('elec', str),
+        ('ref_elec', str),
+        ('work_elec', str)
+])
 
 # @cython.ccall      
 def open_file_numpy(data_dir: pathType, filename: pathType) -> Opt[np.ndarray]:
-    filename = str(filename)
-    file = str(data_dir) + "/" + str(filename)
+    file = data_dir + "/" + filename
     if filename.endswith((".csv", )):   # ".txt")):
         with open(file, 'r') as source:
             data_array: np.ndarray = np.loadtxt(source,
-                                                delimiter=",",
-                                                skiprows=20,
-                                                dtype=float)
-
+                                            delimiter=",",
+                                            skiprows=20,
+                                            dtype=float)
         return data_array
     else:
         return None
 
-executor = ThreadPoolExecutor(max_workers=10)
-
-async def async_open_file_numpy(data_dir: pathType, filename: pathType) -> Any:
-    loop = asyncio.get_event_loop()
-    fut =  await loop.run_in_executor(executor, open_file_numpy, data_dir, filename)
-    # reveal_type(fut)
-    return fut
-
 
 # @cython.ccall
-async def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
+def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
     x_array: Opt[np.ndarray] = None
     y_array: Opt[np.ndarray] = None
     imped: Opt[np.ndarray]
@@ -70,46 +64,7 @@ async def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
     return data
 
 
-async def write_imp_data(data: Tuple[np.ndarray, ...], params: Tuple[str, ...], output_dir: pathType) -> None:
-    """"""
-    #(filename_strip, solv, elec, ref_elec, work_elec) = params
-    filename_strip = params[0]
-    if len(data) == 5:
-        (freq_log, imped_log, phase, imag_imped, real_imped) = data
-        with open(f"{filename_strip}.csv", 'w') as csvfile:
-            csvwriter = csv.writer(csvfile, delimiter=',')
-            for x in range(len(freq_log)):
-                csvwriter.writerow([float(freq_log[x]), 
-                                    float(imped_log[x]), 
-                                    float(phase[x]), 
-                                    float(imag_imped[x]), 
-                                    float(real_imped[x])])
-
-
-async def write_zview_data(data: Tuple[np.ndarray, ...], params: Tuple[str, ...], output_dir: pathType) -> None:
-    """"""
-    # (filename_strip, solv, elec, ref_elec, work_elec) = params
-    filename_strip = params[0]
-    if len(data) == 5:
-        (freq_log, imped_log, phase, imag_imped, real_imped) = data     # pylint: disable=W0612
-        freq = 10 ** (freq_log)
-        with open(f"{output_dir}/{filename_strip}_zveiw.csv", 'w', newline='') as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(['Z60W Data File: Version 1.1'])
-            csvwriter.writerow([])
-            csvwriter.writerow([])
-            csvwriter.writerow([])
-            csvwriter.writerow([])
-            csvwriter.writerow([])
-            csvwriter.writerow([])
-            csvwriter.writerow([])
-            csvwriter.writerow([0, 2, 0, 1, 0.1, 100000])
-            csvwriter.writerow([78])
-            for x in range(len(freq_log)):
-                csvwriter.writerow([float(freq[x]), 0, 0, 0, float(real_imped[x]), float(-imag_imped[x]), 0, 0, 0])
-
-
-async def get_params(filename: pathType) -> Tuple[str, str, str, str, str]:
+def get_params(filename: pathType) -> paramsTup:  # Tuple[str, str, str, str, str]:
     """"""
     filename_strip = filename[:-4]
     if "agcl" in filename_strip:
@@ -139,7 +94,52 @@ async def get_params(filename: pathType) -> Tuple[str, str, str, str, str]:
         solv = "MeCN"
     else:
         solv = "H2O"
-    return (filename_strip, solv, elec, ref_elec, work_elec)
+
+    params = paramsTup(filename_strip, solv, elec, ref_elec, work_elec)
+    # reveal_type(params)
+    return params
+
+
+def write_imp_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> None:
+    """"""
+    #(filename_strip, solv, elec, ref_elec, work_elec) = params
+    filename_strip = params.filename_strip
+    if len(data) == 5:
+        (freq_log, imped_log, phase, imag_imped, real_imped) = data
+        with open(f"{output_dir}/{filename_strip}.csv", 'w') as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter=',')
+            for x in range(len(freq_log)):
+                csvwriter.writerow([float(freq_log[x]), 
+                                    float(imped_log[x]), 
+                                    float(phase[x]), 
+                                    float(imag_imped[x]), 
+                                    float(real_imped[x])])
+            print(f"{filename_strip} impedance csv done")
+
+
+def write_zview_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> None:
+    """""" 
+    # (filename_strip, solv, elec, ref_elec, work_elec) = params
+    filename_strip = params.filename_strip
+    if len(data) == 5:
+        (freq_log, imped_log, phase, imag_imped, real_imped) = data     # pylint: disable=W0612
+        freq = 10 ** (freq_log)
+        with open(f"{output_dir}/{filename_strip}_zveiw.csv", 'w', newline='') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(['Z60W Data File: Version 1.1'])
+            csvwriter.writerow([])
+            csvwriter.writerow([])
+            csvwriter.writerow([])
+            csvwriter.writerow([])
+            csvwriter.writerow([])
+            csvwriter.writerow([])
+            csvwriter.writerow([])
+            csvwriter.writerow([0, 2, 0, 1, 0.1, 100000])
+            csvwriter.writerow([78])
+            for x in range(len(freq_log)):
+                csvwriter.writerow([float(freq[x]), 0, 0, 0, float(real_imped[x]), float(-imag_imped[x]), 0, 0, 0])
+            print(f"{filename_strip} zveiw csv done")
+
 
 
 def fourier_smooth(x_var: np.ndarray, y_var: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:

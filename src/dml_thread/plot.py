@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 from typing import Tuple #, override, get_type_hints
 from typing import Optional as Opt
-from dmlechemmods.types import simpDict, pathType
+from dml_thread.types import simpDict, pathType
 
 
 data_dir: pathType = os.getcwd()  # cast(pathType, os.getcwd())

@@ -1,64 +1,68 @@
 import time
 import os
 import json
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
-import aiofiles
+import itertools
 
 import tkinter as tk
 from tkinter.filedialog import askdirectory, askopenfilename, askopenfilenames
 import tkinter.ttk as ttk
 # from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 
-from typing import List, cast# ,Union, override, get_type_hints
-# from typing import Optional as Opt
-from dmlechemmods.types import simpDict,  pathType  # , Num, simpTypes, simpList, compList, compDict,
+from typing import Union, List, cast  # ,Union, override, get_type_hints
+from typing import Optional as Opt
+from dml_thread.types import simpDict,  pathType  # , Num, simpTypes, simpList, compList, compDict,
 
-from dml_async import somecython, mung, plot
+from dml_thread import somecython, mung, plot
+
+from concurrent.futures import ProcessPoolExecutor  # . ThreadPoolExecutor
+from multiprocessing import cpu_count
+# print(cpu_count())  # laptop = 8 
+
+def open_mung_save(data_dir: pathType, filename: pathType, output_dir: Opt[pathType] = None) -> None:
+    """"""
+    cv_file = mung.open_file_numpy(data_dir, filename)
+    if cv_file is not None:
+        data = mung.get_data_numpy(cv_file)
+        params = mung.get_params(filename)
+        if data is not None and len(data) == 2: 
+            (x_var, y_var) = data
+            plot.make_cv_plot(x_var, y_var, params, output_dir)
+        elif data is not None and len(data) == 5:
+            mung.write_imp_data(data, params, output_dir)
+            mung.write_zview_data(data, params, output_dir)
+            (freq_log, imped_log, phase, imag_imped, real_imped) = data
+            plot.make_bode_plot(freq_log, imped_log, phase, params, output_dir)
+            plot.make_nyquist_plot(imag_imped, real_imped, params, output_dir)
 
 
-async def get_filelist(data_dir: pathType):
-    loop = asyncio.get_event_loop()
-    executor = ThreadPoolExecutor(max_workers=10)
-    fut = loop.run_in_executor(executor, os.listdir, data_dir)
-    yield fut
-
-
-async def open_mung_save(data_dir: pathType, output_dir: pathType = None) -> None:
-
+def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None) -> None:
+    """"""
     mung_time = time.perf_counter()
     num_files = len([fily for fily in os.listdir(data_dir)
                      if fily.endswith((".txt", ".csv", ".tsv"))])
-    print(f"{num_files} found in {data_dir}. Munging data  ....")
 
-    if not output_dir:
-        output_dir = f"{data_dir}/output"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    async for filename in get_filelist(data_dir):
-        print(filename)
-        cv_file = await mung.async_open_file_numpy(data_dir, filename)
-        if cv_file is not None:
-            data = await mung.get_data_numpy(cv_file)
-            params = await mung.get_params(filename)
-            if data is not None and len(data) == 2:
-                (x_var, y_var) = data
-                plot.make_cv_plot(x_var, y_var, params, output_dir)
-            elif data is not None and len(data) == 5:
-                await mung.write_imp_data(data, params, output_dir)
-                await mung.write_zview_data(data, params, output_dir)
-                (freq_log, imped_log, phase, imag_imped, real_imped) = data
-                plot.make_bode_plot(freq_log, imped_log, phase, params, output_dir)
-                plot.make_nyquist_plot(imag_imped, real_imped, params, output_dir)
-
-    finish_time = round(time.perf_counter() - mung_time)
     if num_files > 0:
-        print(
-            f"Munging done @ {finish_time:.2f} s \n{num_files} files @ {finish_time/num_files:.2f} s each")
+        print(f"{num_files} found in {data_dir}. Munging data  ...")
+        if not output_dir:
+            output_dir = f"{data_dir}/output"
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        workers = num_files if (0 < num_files < cpu_count()) else (cpu_count() - 1)  # eg = 5 if 5 files, but 8 if 10 files
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            filelist = [filename for filename in os.listdir(data_dir)]
+            executor.map(open_mung_save, itertools.repeat(data_dir, len(filelist)), filelist, itertools.repeat(output_dir))
+            # for filename in os.listdir(data_dir):
+            # future = executor.submit(open_mung_save, data_dir, filename, output_dir)
+
+        finish_time = time.perf_counter() - mung_time
+        print(f"\nMunging done @ {finish_time:.2f} s \n{num_files} files @ {finish_time/num_files:.2f} s each")
+    else:
+        print("No data files found in directory")
 
 
 class Application(ttk.Frame):
+    """"""
     def __init__(self, master: tk.Tk = None) -> None:
         super().__init__(master)
 
@@ -102,7 +106,7 @@ class Application(ttk.Frame):
     def createWidgets(self) -> None:
         self.some_mathButton = ttk.Button(self.master,
                                           text='Random Math',
-                                          command=lambda: print(somecython.somemath(int(input("input number, press enter ")))))
+                                          command=self.print_somecython)
         self.some_mathButton.grid(row=2, column=3)
 
         self.data_dirButton = ttk.Button(self.master,
@@ -112,8 +116,7 @@ class Application(ttk.Frame):
 
         self.goButton = ttk.Button(self.master,
                                    text='Go',
-                                   command=self.mung_loop,
-        )
+                                   command=lambda: thread_open_mung_save(self.data_dir))
         self.goButton.grid(row=4, column=3)
 
         self.quitButton = ttk.Button(self.master,
@@ -123,17 +126,17 @@ class Application(ttk.Frame):
         self.quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10)
 
 
-    def mung_loop(self):
-        #executor = ThreadPoolExecutor(max_workers=10)
-        loop = asyncio.get_event_loop()
-        try:
-            loop.run_until_complete(open_mung_save(self.data_dir))
-        except Exception as e:
-            print(e)
-        #fut = loop.run_in_executor(executor, open_mung_save, self.data_dir)
-        # loop.close()
-        # reveal_type(fut)
-        # return fut
+    def print_somecython(self) -> None:
+        a_num: Union[str, int] = ""
+        while not isinstance(a_num, int):
+            a_num = input("input number, press enter ")
+            try:
+                a_num = int(a_num)
+            except:
+                continue
+            else:
+                b_num: int = a_num
+                print(somecython.somemath(b_num))
 
     def get_datapath(self) -> None:
         # new_data_dir: pathType = askdirectory(title='Select data folder')
@@ -141,7 +144,7 @@ class Application(ttk.Frame):
                                             '*.csv'), ('Text files', 'txt.*'), ]
         new_data_list: List[pathType] = askopenfilenames(
             title='Select data folder', filetypes=filetypes)
-        if new_data_list is not None:
+        if new_data_list:
             new_data_file: pathType = new_data_list[0]
             # directory = os.path.dirname(os.path.realpath(tkFileDialog.askopenfilename()))
             new_data_dir: pathType = cast(

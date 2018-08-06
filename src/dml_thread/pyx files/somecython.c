@@ -780,15 +780,6 @@ static const char *__pyx_f[] = {
   "somecython.pyx",
 };
 
-/* "somecython.pyx":4
- * 
- * # c_int = cython.int  # reveal_type(cython.int)
- * c_int = cython.typedef(cython.int)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-typedef int __pyx_t_10somecython_c_int;
-
 /*--- Type declarations ---*/
 
 /* --- Runtime support code (head) --- */
@@ -959,7 +950,7 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 /* Module declarations from 'cython' */
 
 /* Module declarations from 'somecython' */
-static __pyx_t_10somecython_c_int __pyx_f_10somecython_somemath(__pyx_t_10somecython_c_int, int __pyx_skip_dispatch); /*proto*/
+static int __pyx_f_10somecython_somemath(int, int __pyx_skip_dispatch); /*proto*/
 #define __Pyx_MODULE_NAME "somecython"
 extern int __pyx_module_is_main_somecython;
 int __pyx_module_is_main_somecython = 0;
@@ -971,48 +962,46 @@ static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_10somecython_somemath(CYTHON_UNUSED PyObject *__pyx_self, __pyx_t_10somecython_c_int __pyx_v_number); /* proto */
+static PyObject *__pyx_pf_10somecython_somemath(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_number); /* proto */
 /* Late includes */
 
-/* "somecython.pyx":8
+/* "somecython.pyx":5
  * 
  * @cython.ccall
- * def somemath(number: c_int) -> c_int:             # <<<<<<<<<<<<<<
- *   dn: c_int = number * 6
- *   return dn
+ * def somemath(number: cython.int) -> cython.int:             # <<<<<<<<<<<<<<
+ *     dn: cython.int = number * 6
+ *     return dn
  */
 
 static PyObject *__pyx_pw_10somecython_1somemath(PyObject *__pyx_self, PyObject *__pyx_arg_number); /*proto*/
-static __pyx_t_10somecython_c_int __pyx_f_10somecython_somemath(__pyx_t_10somecython_c_int __pyx_v_number, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  __pyx_t_10somecython_c_int __pyx_v_dn;
-  __pyx_t_10somecython_c_int __pyx_r;
+static int __pyx_f_10somecython_somemath(int __pyx_v_number, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  int __pyx_v_dn;
+  int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("somemath", 0);
 
-  /* "somecython.pyx":9
+  /* "somecython.pyx":6
  * @cython.ccall
- * def somemath(number: c_int) -> c_int:
- *   dn: c_int = number * 6             # <<<<<<<<<<<<<<
- *   return dn
- * 
+ * def somemath(number: cython.int) -> cython.int:
+ *     dn: cython.int = number * 6             # <<<<<<<<<<<<<<
+ *     return dn
  */
   __pyx_v_dn = (__pyx_v_number * 6);
 
-  /* "somecython.pyx":10
- * def somemath(number: c_int) -> c_int:
- *   dn: c_int = number * 6
- *   return dn             # <<<<<<<<<<<<<<
- * 
+  /* "somecython.pyx":7
+ * def somemath(number: cython.int) -> cython.int:
+ *     dn: cython.int = number * 6
+ *     return dn             # <<<<<<<<<<<<<<
  */
   __pyx_r = __pyx_v_dn;
   goto __pyx_L0;
 
-  /* "somecython.pyx":8
+  /* "somecython.pyx":5
  * 
  * @cython.ccall
- * def somemath(number: c_int) -> c_int:             # <<<<<<<<<<<<<<
- *   dn: c_int = number * 6
- *   return dn
+ * def somemath(number: cython.int) -> cython.int:             # <<<<<<<<<<<<<<
+ *     dn: cython.int = number * 6
+ *     return dn
  */
 
   /* function exit code */
@@ -1024,12 +1013,12 @@ static __pyx_t_10somecython_c_int __pyx_f_10somecython_somemath(__pyx_t_10somecy
 /* Python wrapper */
 static PyObject *__pyx_pw_10somecython_1somemath(PyObject *__pyx_self, PyObject *__pyx_arg_number); /*proto*/
 static PyObject *__pyx_pw_10somecython_1somemath(PyObject *__pyx_self, PyObject *__pyx_arg_number) {
-  __pyx_t_10somecython_c_int __pyx_v_number;
+  int __pyx_v_number;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("somemath (wrapper)", 0);
   assert(__pyx_arg_number); {
-    __pyx_v_number = __Pyx_PyInt_As_int(__pyx_arg_number); if (unlikely((__pyx_v_number == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L3_error)
+    __pyx_v_number = __Pyx_PyInt_As_int(__pyx_arg_number); if (unlikely((__pyx_v_number == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -1037,22 +1026,22 @@ static PyObject *__pyx_pw_10somecython_1somemath(PyObject *__pyx_self, PyObject 
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10somecython_somemath(__pyx_self, ((__pyx_t_10somecython_c_int)__pyx_v_number));
+  __pyx_r = __pyx_pf_10somecython_somemath(__pyx_self, ((int)__pyx_v_number));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10somecython_somemath(CYTHON_UNUSED PyObject *__pyx_self, __pyx_t_10somecython_c_int __pyx_v_number) {
+static PyObject *__pyx_pf_10somecython_somemath(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_number) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  __pyx_t_10somecython_c_int __pyx_t_1;
+  int __pyx_t_1;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("somemath", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_10somecython_somemath(__pyx_v_number, 0); if (unlikely(__pyx_t_1 == ((__pyx_t_10somecython_c_int)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_10somecython_somemath(__pyx_v_number, 0); if (unlikely(__pyx_t_1 == ((int)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -1368,9 +1357,9 @@ if (!__Pyx_RefNanny) {
   #endif
 
   /* "somecython.pyx":1
- * cimport cython             # <<<<<<<<<<<<<<
+ * import cython             # <<<<<<<<<<<<<<
  * 
- * # c_int = cython.int  # reveal_type(cython.int)
+ * 
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);

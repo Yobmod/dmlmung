@@ -2,7 +2,12 @@ from distutils.core import setup
 from Cython.Build import cythonize
 
 
-scripts = ["somecython.pyx", "cv.pyx"]
+scripts = [
+            "somecython.pyx",
+            # "mung.pyx", 
+            # "plot.pyx", 
+            # "gui.pyx",
+]
 
 
 setup(
