@@ -23,8 +23,9 @@ if __name__ == "__main__":
 
     root = tk.Tk()
     app = gui.Application(master=root)
-    root.title('DML E-Chem')
+    #root.title('DML E-Chem')
     root.iconbitmap(R'.\dml_thread\img\coffeebean.ico')
-    root.geometry("400x400")  # hxw+x+y: str
+    root.geometry("600x400")  # wxh+x+y: str
     print(f"GUI started @ {time.perf_counter() - start_time:.2f} s")
+
     app.mainloop()

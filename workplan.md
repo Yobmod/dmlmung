@@ -69,3 +69,67 @@ Try Thread/Processpool
 Add Processpool
 
 Make installer with NSIS
+
+
+0.7--------------------------------------------
+
+Tkinter GUI:
+	Add notebook pages
+			Settings
+				Add button to view/edit settings file
+				Add revert to default settings button
+			Batch
+				Select folder
+				Go
+			File
+				Select file
+				Go
+			Misc
+				(for testing)
+
+0.8---------------------------------------------
+
+Tkinter GUI:
+		Add canvas to file page
+		Display graph on canvas
+	Add text fields to update settings
+	Add color picker to update settings
+	Display print/log(msges) in a text box
+
+Pyinstaller make unwindowed
+
+
+0.9------------------------------------------------
+
+Tkinter GUI:
+		Select boxes for make of potentiometer
+
+Scripts: 
+		Add potentiometer logic
+
+
+
+1.0-----------------------------------------------
+
+Pytest tests
+Release!
+
+
+1.0+ ----------------------------------------------
+
+Cythonize:
+	numpy arrays?
+	File IO?
+
+Gevent/Threads/Trio?:
+	File IO
+
+Pyside/Kivy/Pygame?:
+	GUI
+
+Combine with dmlQCM
+
+
+
+
+	

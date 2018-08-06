@@ -5,6 +5,8 @@ import itertools
 
 import tkinter as tk
 from tkinter.filedialog import askdirectory, askopenfilename, askopenfilenames
+from tkinter import X, Y, TOP, BOTTOM, LEFT, RIGHT, HORIZONTAL, VERTICAL, END, BOTH, ACTIVE, WORD, N, E, NSEW, EW
+
 import tkinter.ttk as ttk
 # from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 
@@ -13,6 +15,7 @@ from typing import Optional as Opt
 from dml_thread.types import simpDict,  pathType  # , Num, simpTypes, simpList, compList, compDict,
 
 from dml_thread import somecython, mung, plot
+from dmltk import panels
 
 from concurrent.futures import ProcessPoolExecutor  # . ThreadPoolExecutor
 from multiprocessing import cpu_count
@@ -74,26 +77,19 @@ class Application(ttk.Frame):
 
         if master is not None:
             self.master = master
-        self.master.grid_rowconfigure(0, weight=10)
-        self.master.grid_rowconfigure(1, weight=10)
-        self.master.grid_rowconfigure(2, weight=10)
-        self.master.grid_rowconfigure(3, weight=10)
-        self.master.grid_rowconfigure(4, weight=10)
-        self.master.grid_rowconfigure(5, weight=10)
-        self.master.grid_rowconfigure(6, weight=10)
 
-        self.master.grid_columnconfigure(0, weight=10)
-        self.master.grid_columnconfigure(1, weight=10)
-        self.master.grid_columnconfigure(2, weight=10)
-        self.master.grid_columnconfigure(3, weight=10)
-        self.master.grid_columnconfigure(4, weight=10)
-        self.master.grid_columnconfigure(5, weight=10)
-        self.master.grid_columnconfigure(6, weight=10)
+        self.master.title('Dml Mung')
+        self._create_widgets()
+        self.pack(expand=Y, fill=BOTH)
 
-        #style = ttk.Style()
+        style = ttk.Style()
+        style.theme_create("MyStyle", parent="alt", settings={
+            # gaps L, T, R, B
+            "TNotebook": {"configure": {"tabmargins": [5, 5, 5, 0]}},
+            "TNotebook.Tab": {"configure": {"padding": [10, 5]}, }})  # tab size [x, y]
+        #style.theme_use("MyStyle")
         #style.configure("Green.TLabel", foreground="white", background="green")
 
-        self.createWidgets()
         """when initated, try open a json to get the default and output dirs. 
         if not found, use hardcoded defaults/os.getcwd().
         Make button so can change default dir and output dir and save the json. 
@@ -103,28 +99,131 @@ class Application(ttk.Frame):
         make radio button to select files or folders
         Make exe icon / tk.root icon"""
 
-    def createWidgets(self) -> None:
-        self.some_mathButton = ttk.Button(self.master,
-                                          text='Random Math',
-                                          command=self.print_somecython)
-        self.some_mathButton.grid(row=2, column=3)
-
-        self.data_dirButton = ttk.Button(self.master,
-                                         text='Select Data',
-                                         command=self.get_datapath)
-        self.data_dirButton.grid(row=3, column=3)
-
-        self.goButton = ttk.Button(self.master,
-                                   text='Go',
-                                   command=lambda: thread_open_mung_save(self.data_dir))
-        self.goButton.grid(row=4, column=3)
-
-        self.quitButton = ttk.Button(self.master,
+        """
+        quitButton = ttk.Button(self.master,
                                      text='Quit',
                                      command=self.quit, #style="Green.TLabel")
         )
-        self.quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10)
+        quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10)
+        """
 
+
+    def _create_widgets(self) -> None:
+        panels.SeeDismissPanel(self)
+        self._create_notebook_panel()
+
+
+    def _create_notebook_panel(self) -> None:
+        MainPanel = tk.Frame(self, name='demo')
+        MainPanel.pack(side=TOP, fill=BOTH, expand=Y)
+
+        # create the notebook
+        nb = ttk.Notebook(MainPanel, name='notebook')
+        # extend bindings to top level window (CTRL+TAB, SHIFT+CTRL+TAB, ALT+K )
+        nb.enable_traversal()
+        nb.pack(fill=BOTH, expand=Y, padx=2, pady=3)
+
+        # create tabs in notebook
+        self._create_home_tab(nb)
+        self._create_file_tab(nb)
+        self._create_batch_tab(nb)
+        self._create_settings_tab(nb)
+        # self._create_disabled_tab(nb)
+        self._create_text_tab(nb)
+        self._create_misc_tab(nb)
+
+
+    def _create_home_tab(self, nb: ttk.Notebook) -> None:
+        """widgets to be displayed on 'Home'"""
+        frame = ttk.Frame(nb)
+        nb.add(frame, text='   Home   ', underline=4)
+
+
+    def _create_file_tab(self, nb: ttk.Notebook) -> None:
+        """widgets to be displayed on 'File'"""
+        frame = ttk.Frame(nb)
+        nb.add(frame, text='   File   ', underline=3)
+
+        data_dirButton = ttk.Button(frame,
+                                    text='Select Data file',
+                                    command=self.get_datapath)
+        data_dirButton.grid(row=3, column=3)
+
+        goButton = ttk.Button(frame,
+                              text='Go',
+                              command=lambda: thread_open_mung_save(self.data_dir))
+        goButton.grid(row=4, column=3)
+
+
+    def _create_batch_tab(self, nb: ttk.Notebook) -> None:
+        """widgets to be displayed on 'Batch'"""
+        frame = ttk.Frame(nb)
+        nb.add(frame, text='  Batch  ', underline=2)
+
+        data_dirButton = ttk.Button(frame,
+                                    text='Select Data Folder',
+                                    command=self.get_datapath)
+        data_dirButton.grid(row=3, column=3)
+
+        goButton = ttk.Button(frame,
+                              text='Go',
+                              command=lambda: thread_open_mung_save(self.data_dir))
+        goButton.grid(row=4, column=3)
+
+
+    def _create_settings_tab(self, nb: ttk.Notebook) -> None:
+        """widgets to be displayed on 'Settings'"""
+        settings_frame = ttk.Frame(nb, name='settings')
+        settings_frame.rowconfigure(1, weight=1)
+        settings_frame.columnconfigure((0, 1), weight=1, uniform=1)
+        nb.add(settings_frame, text='Settings', underline=0,
+               padding=2)  # underline = shortcut char index
+
+        msg = ["Please change settings and click save. To return to default settings, click reset. \nSettings will be applied to File and Batch plots"]   #
+        settingslbl = ttk.Label(
+            settings_frame, wraplength='4i', justify=LEFT, anchor=N, text=''.join(msg))
+        settingslbl.grid(row=0, column=0, columnspan=2, sticky='new', pady=5)
+
+        loadbtn = ttk.Button(
+            settings_frame, text='Load Settings', underline=0, command=None)
+        loadbtn.grid(row=3, column=3, pady=(2, 4))
+
+        savebtn = ttk.Button(
+            settings_frame, text='Save Settings', underline=0, command=None)
+        savebtn.grid(row=4, column=3, pady=(2, 4))
+
+        resetbtn = ttk.Button(settings_frame, text='Reset',
+                              underline=0, command=None)
+        resetbtn.grid(row=5, column=3, pady=(2, 4))
+
+
+    def _create_misc_tab(self, nb: ttk.Notebook) -> None:
+        """widgets to be displayed on 'Misc'"""
+        frame = ttk.Frame(nb)
+        nb.add(frame, text='Misc', underline=0)
+
+        some_mathButton = ttk.Button(frame,
+                                     text='Random Math',
+                                     command=self.print_somecython)
+        some_mathButton.grid(row=2, column=3)
+
+
+    def _create_disabled_tab(self, nb: ttk.Notebook) -> None:
+        """Populate the second pane. Note that the content doesn't really matter"""
+        frame = ttk.Frame(nb)
+        nb.add(frame, text='Disabled', state='disabled')
+
+
+    def _create_text_tab(self, nb: ttk.Notebook) -> None:
+        """populate the third frame with a text widget"""
+        frame = ttk.Frame(nb)
+        txt = tk.Text(frame, wrap=WORD, width=40, height=10)
+        vscroll = ttk.Scrollbar(frame, orient=VERTICAL, command=txt.yview)
+        txt['yscroll'] = vscroll.set
+        vscroll.pack(side=RIGHT, fill=Y)
+        txt.pack(fill=BOTH, expand=Y)
+        # add to notebook (underline = index for short-cut character)
+        nb.add(frame, text='Text Editor', underline=0)
 
     def print_somecython(self) -> None:
         a_num: Union[str, int] = ""
@@ -137,6 +236,7 @@ class Application(ttk.Frame):
             else:
                 b_num: int = a_num
                 print(somecython.somemath(b_num))
+
 
     def get_datapath(self) -> None:
         # new_data_dir: pathType = askdirectory(title='Select data folder')

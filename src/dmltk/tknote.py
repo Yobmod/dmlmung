@@ -1,11 +1,9 @@
-# from tkinter import *
 import tkinter as tk
 from tkinter import X, Y, TOP, BOTTOM, LEFT, RIGHT, HORIZONTAL, VERTICAL, END, BOTH, ACTIVE, WORD, N, E, NSEW, EW
 from tkinter import ttk
-from dmltk.panels import MsgPanel, SeeDismissPanel
-import tkinter as tk
-
-class NotebookDemo(ttk.Frame):
+# from dmltk import panels
+import panels
+class Notebook(ttk.Frame):
     """"""
     def __init__(self, isapp: bool=True, master: tk.Tk=None, name: str='notebookdemo') -> None:
         ttk.Frame.__init__(self, name=name)
@@ -18,7 +16,7 @@ class NotebookDemo(ttk.Frame):
 
     def _create_widgets(self) -> None:
         if self.isapp:
-            SeeDismissPanel(self)
+            panels.SeeDismissPanel(self)
         self._create_demo_panel()
 
     def _create_demo_panel(self) -> None:
@@ -90,4 +88,4 @@ class NotebookDemo(ttk.Frame):
 
 
 if __name__ == '__main__':
-    NotebookDemo().mainloop()
+    Notebook().mainloop()
