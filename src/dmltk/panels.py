@@ -6,6 +6,8 @@ from tkinter import X, TOP, BOTTOM, LEFT, RIGHT, HORIZONTAL, VERTICAL, END, BOTH
 from PIL import Image, ImageTk
 import inspect
 
+from typing import Union
+
 # Icons sourced from:
 #    http://findicons.com/icon/69404/deletered?width=16#
 #    http://findicons.com/icon/93110/old_edit_find?width=16#
@@ -21,7 +23,7 @@ class MsgPanel(ttk.Frame):
 
 
 class SeeDismissPanel(ttk.Frame):
-    def __init__(self, master: tk.Tk) -> None:
+    def __init__(self, master: Union[ttk.Frame, tk.Frame]) -> None:
         ttk.Frame.__init__(self, master)
         self.master = master
         self.pack(side=BOTTOM, fill=X)       # resize with parent

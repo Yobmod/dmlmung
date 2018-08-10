@@ -111,11 +111,21 @@ Scripts:
 
 1.0-----------------------------------------------
 
+Logging
 Pytest tests
+
 Release!
 
+1.1------------------------------------------------
 
-1.0+ ----------------------------------------------
+Make File single thread 
+	Checkbox for parallel if more than one file selected
+
+
+Make Batch recursive with checkbox
+	Add timeout / recursion limit
+
+1.1+ ----------------------------------------------
 
 Cythonize:
 	numpy arrays?

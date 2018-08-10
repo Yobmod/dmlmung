@@ -14,11 +14,10 @@ from dml_thread.types import simpDict, pathType
 data_dir: pathType = os.getcwd()  # cast(pathType, os.getcwd())
 
 
-def get_json_settings(json_file: pathType) -> Opt[simpDict]:
+def get_json_settings(json_file: pathType) -> simpDict:
     """"""
-    settings: Opt[simpDict] = None
     with open('./' + json_file, 'r') as jf:
-        settings = json.load(jf)
+        settings: simpDict = json.load(jf)
     return settings
 
 
@@ -36,15 +35,15 @@ def save_json_settings(json_file: pathType, setting_dict: simpDict) -> None:
 
 fontlab_default: simpDict = dict(family='sans-serif', color='darkred', weight='normal', size=12)
 
-
 fontlab: Opt[simpDict] = get_json_settings('settings.json')
 if fontlab is None:
     fontlab = fontlab_default
 # print(fontlab)
 
 
-def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: Tuple[str, ...], output_dir: str = None) -> None:
+def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: Tuple[str, ...], output_dir: str = None,  settings: simpDict = fontlab_default) -> None:
     """"""
+
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     # ax2 = ax1.twiny()
@@ -56,10 +55,10 @@ def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: Tuple[str, ...], 
     expt_vars = f"WE = {work_elec} \nRE = {ref_elec} \nElectrolyte = {elec} \nSolvent = {solv}"
     plt.title(f"CV of {work_elec} in {elec} ({solv}) vs {ref_elec} reference", y=1.05)
 
-    plt.xlabel(f'Applied potential vs {ref_elec} reference (V)', fontdict=fontlab)
+    plt.xlabel(f'Applied potential vs {ref_elec} reference (V)', fontdict=settings)
 
-    plt.ylabel('Current' + ' (uA)', fontdict=fontlab)
-    plt.text(xmax * 1.1, 0, expt_vars, fontdict=fontlab, withdash=False)
+    plt.ylabel('Current' + ' (uA)', fontdict=settings)
+    plt.text(xmax * 1.1, 0, expt_vars, fontdict=settings, withdash=False)
 
     plt.savefig(f"{output_dir}/{filename_strip}" + '_auto.png', bbox_inches='tight', dpi=500, transparent=True)
 

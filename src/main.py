@@ -17,15 +17,29 @@ if __name__ == "__main__":
     import multiprocessing
     multiprocessing.freeze_support()
     print("starting...")
+    # import PySide2
+    import os
+    import sys
     import tkinter as tk
-    from dml_thread import gui  # , log, types, mung, plot, somecython
+    from dml_thread import gui, log  # , log, types, mung, plot, somecython
+    from dml_thread.log import logger
+
     print(f"Imports done @ {time.perf_counter() - start_time:.2f} s")
 
     root = tk.Tk()
-    app = gui.Application(master=root)
-    #root.title('DML E-Chem')
     root.iconbitmap(R'.\dml_thread\img\coffeebean.ico')
-    root.geometry("600x400")  # wxh+x+y: str
-    print(f"GUI started @ {time.perf_counter() - start_time:.2f} s")
+    root.geometry("700x400")  # wxh+x+y: str
+    root.title('DML E-Chem')
+    app = gui.Application(master=root)
 
-    app.mainloop()
+    try:
+        print(f"GUI started @ {time.perf_counter() - start_time:.2f} s")
+        app.mainloop()
+    except KeyboardInterrupt as ke:
+        print('\nApp closed with ctrl-C')
+        logger.info(str(ke))  #, 'App closed with ctrl-C \n')
+    except Exception as e:
+        logger.exception(repr(e))
+        raise
+    finally:
+        print('DMLmung app closed')
