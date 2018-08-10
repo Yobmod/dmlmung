@@ -54,11 +54,11 @@ def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
         x_array = None  # np.empty(0) and remove Opt ? and is not Nones below
         y_array = None
 
+    data: Opt[Tuple[np.ndarray, ...]]
     if x_array is not None and y_array is not None:  # both not falsey
-        data: Opt[Tuple[np.ndarray, ...]] = (x_array, y_array)
+        data = (x_array, y_array) # if x_array is not None else None
     elif imped is not None and phase is not None:
         data = (freq_log, imped_log, phase, imag_imped, real_imped)
-        # print(imped)
     else:
         data = None
     return data

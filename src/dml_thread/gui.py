@@ -40,7 +40,7 @@ def open_mung_save( data_dir: pathType,
     """"""
     cv_file = mung.open_file_numpy(data_dir, filename)
     if cv_file is not None:
-        data = mung.get_data_numpy(cv_file)
+        data = mung.get_data_numpy(cv_file) # if cv_file is not None else None
         params = mung.get_params(filename)
         if data is not None and len(data) == 2:
             (x_var, y_var) = data

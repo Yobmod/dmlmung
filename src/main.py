@@ -35,9 +35,9 @@ if __name__ == "__main__":
     try:
         print(f"GUI started @ {time.perf_counter() - start_time:.2f} s")
         app.mainloop()
-    except KeyboardInterrupt as ke:
+    except (KeyboardInterrupt, SystemExit) as ke:
         print('\nApp closed with ctrl-C')
-        logger.info(str(ke))  #, 'App closed with ctrl-C \n')
+        logger.info(repr(ke))
     except Exception as e:
         logger.exception(repr(e))
         raise
