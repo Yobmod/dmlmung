@@ -4,9 +4,11 @@ from Cython.Build import cythonize
 
 scripts = [
             "somecython.pyx",
-            # "mung.pyx", 
-            # "plot.pyx", 
+            "mung.pyx", 
+            "plot.pyx", 
             # "gui.pyx",
+            "log.pyx",
+            "types.pyx",
 ]
 
 

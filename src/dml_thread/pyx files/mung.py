@@ -3,21 +3,18 @@ import csv
 # cimport cython
 from typing import Tuple, NamedTuple
 from typing import Optional as Opt
-from dml_thread.types import pathType, simpDict
-
-from dml_thread import plot
+from dml_thread.types import pathType
 
 paramsTup = NamedTuple('paramsTup', [
         ('filename_strip', str),
         ('solv', str),
         ('elec', str),
         ('ref_elec', str),
-        ('work_elec', str)
+        ('work_elec', str) 
 ])
 
 # @cython.ccall      
 def open_file_numpy(data_dir: pathType, filename: pathType) -> Opt[np.ndarray]:
-    """ """
     file = data_dir + "/" + filename
     if filename.endswith((".csv", )):   # ".txt")):
         with open(file, 'r') as source:
@@ -154,33 +151,6 @@ def fourier_smooth(x_var: np.ndarray, y_var: np.ndarray) -> Tuple[np.ndarray, np
     return (x_var, y_smooth)
 
 
-fontlab_default: simpDict = dict(
-    family='sans-serif', color='darkred', weight='normal', size=12)
-
-
-def open_mung_save(data_dir: pathType,
-                   filename: pathType,
-                   output_dir: Opt[pathType] = None,
-                   settings: simpDict = fontlab_default
-                   ) -> None:
-    """"""
-    cv_file = open_file_numpy(data_dir, filename)
-    if cv_file is not None:
-        data = get_data_numpy(cv_file)  # if cv_file is not None else None
-        params = get_params(filename)
-        if data is not None and len(data) == 2:
-            (x_var, y_var) = data
-            print(settings)
-            plot.make_cv_plot(x_var, y_var, params,
-                              output_dir, settings=settings)
-        elif data is not None and len(data) == 5:
-            write_imp_data(data, params, output_dir)
-            write_zview_data(data, params, output_dir)
-            (freq_log, imped_log, phase, imag_imped, real_imped) = data
-            plot.make_bode_plot(freq_log, imped_log, phase, params, output_dir)
-            plot.make_nyquist_plot(imag_imped, real_imped, params, output_dir)
-
-
 """"
 def get_imp_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, np.ndarray]]:
     if len(data_array[0]) == 6:
@@ -209,9 +179,8 @@ def get_imp_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, np.ndarray]]:
 if __name__ == "__main__":
     import os
     dd = os.getcwd()
-    ee = pathType(f"{dd}/test")
-    
-    for ff in os.listdir(ee): 
+    ee = f"{dd}/test"
+    for ff in os.listdir(ee):
         array = open_file_numpy(ee, ff)
         get_data_numpy(array)
 

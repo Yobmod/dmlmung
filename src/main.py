@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     root = tk.Tk()
     root.iconbitmap(R'.\dml_thread\img\coffeebean.ico')
-    root.geometry("700x400")  # wxh+x+y: str
+    root.geometry("700x400")  # wxh+x+y: as str
     root.title('DML E-Chem')
     app = gui.Application(master=root)
 

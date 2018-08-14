@@ -10,18 +10,18 @@ from typing import Optional as Opt
 from dml_thread.types import simpDict, pathType
 
 
-data_dir: pathType = os.getcwd()  # cast(pathType, os.getcwd())
+data_dir: pathType = pathType(os.getcwd())  # cast(pathType, os.getcwd())
 
 
 def get_json_settings(json_file: pathType) -> simpDict:
     """"""
-    with open('./' + json_file, 'r') as jf: 
+    with open('./' + json_file, 'r') as jf:
         settings: simpDict = json.load(jf)
     return settings
 
 
 def save_json_settings(json_file: pathType, setting_dict: simpDict) -> None:
-    """  """
+    """"""
     try:
         setting_json = json.dumps(setting_dict)
     except ValueError as e:
@@ -34,7 +34,7 @@ def save_json_settings(json_file: pathType, setting_dict: simpDict) -> None:
 
 fontlab_default: simpDict = dict(family='sans-serif', color='darkred', weight='normal', size=12)
 
-fontlab: Opt[simpDict] = get_json_settings('settings.json')
+fontlab: Opt[simpDict] = get_json_settings(pathType('settings.json'))
 if fontlab is None:
     fontlab = fontlab_default
 # print(fontlab)

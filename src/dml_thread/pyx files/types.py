@@ -13,6 +13,6 @@ simpDict = Dict[str, Union[simpTypes, simpList]]
 compList = List[Union[simpTypes, List[Any], Dict[str, Any]]]
 compDict = Dict[str, Union[simpTypes, List[Any], Dict[str, Any]]]
 
-# pathType = NewType('pathType', str)
-pathType = str
+pathType = NewType('pathType', str)
+# pathType = Union[pathtype, str]
 

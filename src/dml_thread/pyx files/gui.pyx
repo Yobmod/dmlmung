@@ -31,6 +31,30 @@ from multiprocessing import cpu_count
 fontlab_default: simpDict = dict(
     family='sans-serif', color='darkred', weight='normal', size=12)
 
+
+def open_mung_save( data_dir: pathType, 
+                    filename: pathType, 
+                    output_dir: Opt[pathType] = None, 
+                    settings: simpDict = fontlab_default
+                    ) -> None:
+    """"""
+    cv_file = mung.open_file_numpy(data_dir, filename)
+    if cv_file is not None:
+        data = mung.get_data_numpy(cv_file) # if cv_file is not None else None
+        params = mung.get_params(filename)
+        if data is not None and len(data) == 2:
+            (x_var, y_var) = data
+            print(settings)
+            plot.make_cv_plot(x_var, y_var, params,
+                              output_dir, settings=settings)
+        elif data is not None and len(data) == 5:
+            mung.write_imp_data(data, params, output_dir)
+            mung.write_zview_data(data, params, output_dir)
+            (freq_log, imped_log, phase, imag_imped, real_imped) = data
+            plot.make_bode_plot(freq_log, imped_log, phase, params, output_dir)
+            plot.make_nyquist_plot(imag_imped, real_imped, params, output_dir)
+
+
 def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, settings: Opt[simpDict] = fontlab_default) -> None:
     """"""
     print(output_dir)
@@ -49,7 +73,7 @@ def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, setti
             cpu_count() - 1)  # eg = 5 if 5 files, but 8 if 10 files
         with ProcessPoolExecutor(max_workers=workers) as executor:
             filelist = [filename for filename in os.listdir(data_dir)]
-            executor.map(mung.open_mung_save, itertools.repeat(data_dir, len(
+            executor.map(open_mung_save, itertools.repeat(data_dir, len(
                 filelist)), filelist, itertools.repeat(output_dir), itertools.repeat(settings))
             # for filename in os.listdir(data_dir):
             # future = executor.submit(open_mung_save, data_dir, filename, output_dir)
@@ -73,7 +97,7 @@ class Application(ttk.Frame):
         self.settings_file = '.\settings.json'
         self.settings: simpDict = plot.get_json_settings(self.settings_file)
 
-        if master is not None: 
+        if master is not None:
             self.master = master
 
         self.master.title('Dml Mung')
@@ -99,10 +123,10 @@ class Application(ttk.Frame):
 
         """
         quitButton = ttk.Button(self.master,
-                                      text='Quit',
+                                     text='Quit',
                                      command=self.quit, #style="Green.TLabel")
         ) 
-        quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10) 
+        quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10)
         """
 
     def _create_widgets(self) -> None:
