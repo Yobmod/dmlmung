@@ -15,6 +15,7 @@ compDict = Dict[str, Union[simpTypes, List[Any], Dict[str, Any]]]
 
 # pathType = NewType('pathType', str)
 pathType = str
+tkEvent = NewType('tkEvent', str)
 
 paramsTup = NamedTuple('paramsTup', [
     ('filename_strip', str),

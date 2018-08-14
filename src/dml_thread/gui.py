@@ -19,7 +19,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from typing import Union, List, cast  # ,Union, override, get_type_hints
 from typing import Optional as Opt
 # , Num, simpTypes, simpList, compList, compDict,
-from dml_thread.types import simpDict,  pathType
+from dml_thread.types import simpDict,  pathType, tkEvent
 
 from dml_thread import somecython, mung, plot
 from dmltk import panels
@@ -28,10 +28,9 @@ import dmltk
 from concurrent.futures import ProcessPoolExecutor  # . ThreadPoolExecutor
 from multiprocessing import cpu_count
 # print(cpu_count())  # laptop = 8
-fontlab_default: simpDict = dict(
-    family='sans-serif', color='darkred', weight='normal', size=12)
 
-def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, settings: Opt[simpDict] = fontlab_default) -> None:
+
+def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, settings: Opt[simpDict] = None) -> None:
     """"""
     print(output_dir)
     mung_time = time.perf_counter()
@@ -69,8 +68,8 @@ class Application(ttk.Frame):
 
         self.data_dir: pathType = os.getcwd() + R'\data'
         self.out_dir: pathType = self.data_dir + R'\output'
-        self.default_settings = plot.get_json_settings('default_settings.json')
-        self.settings_file = '.\settings.json'
+        self.default_settings = plot.get_json_settings(R'\settings\default_settings.json')
+        self.settings_file = R'.\settings\settings.json'
         self.settings: simpDict = plot.get_json_settings(self.settings_file)
 
         if master is not None: 
@@ -91,8 +90,8 @@ class Application(ttk.Frame):
         """when initated, try open a json to get the default and output dirs.
         if not found, use hardcoded defaults/os.getcwd().
         Make button so can change default dir and output dir and save the json. 
-        Also button to reset to hardcoded defaults
-        Same for matplotlib settings
+
+        button save matplotlib settings (also overwrite settings.json)
         Make input (radio?) for potentiostat types: Autolab, Zahner, utgard smallones, other(contact me)
         make radio button to select files or folders
         Make exe icon / tk.root icon"""
@@ -145,7 +144,7 @@ class Application(ttk.Frame):
 
         goButton = ttk.Button(frame,
                               text='Go',
-                              command=lambda: thread_open_mung_save(self.data_dir))
+                              command=lambda: thread_open_mung_save(self.data_dir, self.out_dir, self.settings))
         goButton.grid(row=4, column=3)
 
     def _create_batch_tab(self, nb: ttk.Notebook) -> None:
@@ -165,7 +164,7 @@ class Application(ttk.Frame):
 
         tButton = ttk.Button(frame,
                              text='Test',
-                             command=lambda: print(self.settings['color']))
+                             command=lambda: print(self.settings['size']))
         tButton.grid(row=6, column=3)
 
     def _create_settings_tab(self, nb: ttk.Notebook) -> None:
@@ -184,6 +183,48 @@ class Application(ttk.Frame):
                                 text=''.join(msg))
         settingslbl.grid(row=0, column=0, columnspan=5, sticky='new', pady=(10, 10), padx=(10, 10))
 
+
+        # Rows/cols for settings
+
+        self.fontvar = tk.StringVar(settings_frame, 
+                                    value=f'Font: {self.settings["family"]}')
+        fontlbl = ttk.Label(settings_frame, textvariable=self.fontvar)
+
+        fontsize_options = [int(x) for x in range(50)]
+        self.fontsizevar = tk.IntVar(settings_frame, value=12)
+        fontsizelbl = ttk.Label(settings_frame, text='Font-size: ')
+        fontsizemenu = ttk.Combobox(
+            settings_frame, textvariable=self.fontsizevar, values=fontsize_options, height=16, width=6, justify=RIGHT, validatecommand=self.update_settings)
+        fontsizemenu.bind("<<ComboboxSelected>>", self.update_settings)
+
+        fontcolorlbl = ttk.Label(settings_frame, 
+                            text=f'Font-size:  {self.settings["color"]}')
+
+        valign_options = ['center', 'top', 'bottom', 'baseline']
+        self.fontvalignvar = tk.StringVar(settings_frame)
+        fontvalignlbl = ttk.Label(settings_frame, text='Axes font colour: ')
+        fontvalignmenu = ttk.OptionMenu(settings_frame, self.fontvalignvar, *valign_options)
+
+        halign_options = ['center', 'right', 'left']
+        self.fonthalignvar = tk.StringVar(settings_frame)
+        fonthalignlbl = ttk.Label(settings_frame, text='Axes font colour: ')
+        fonthalignmenu = ttk.OptionMenu( settings_frame, self.fonthalignvar, *halign_options)
+
+        """    "style or fontstyle": "normal", | 'italic' | 'oblique']
+        """
+
+        fontlbl.grid(row=1, column=1, pady=(0, 0), padx=(0, 0))
+        fontcolorlbl.grid(row=1, column=2, pady=(0, 0), padx=(0, 0))
+
+        fontsizelbl.grid(row=2, column=1, pady=(0, 0), padx=(0, 0))
+        fontsizemenu.grid(row=2, column=2, pady=(0, 0), padx=(0, 0))
+
+        fontvalignlbl.grid(row=3, column=1, pady=(0, 0), padx=(0, 0))
+        fontvalignmenu.grid(row=3, column=2, pady=(0, 0), padx=(0, 0))
+
+        fonthalignlbl.grid(row=4, column=1, pady=(0, 0), padx=(0, 0))
+        fonthalignmenu.grid(row=4, column=2, pady=(0, 0), padx=(0, 0))
+
         # Row for load 
         loadlbl = ttk.Label(settings_frame, text='Load Settings from: ')
         loadtxt = tk.Entry(settings_frame, textvariable='', width=40, justify=LEFT)
@@ -191,11 +232,12 @@ class Application(ttk.Frame):
         loadbrowsebtn = ttk.Button(settings_frame,
                                    text='Browse', command=lambda: self.populate_settingspath(loadtxt))
         loadbtn = ttk.Button(settings_frame,  # populate text box and update self.settings too
-                                    text='Load Settings', underline=0, command=self.update_settings)
-        loadlbl.grid(row=3, column=1, pady=(0, 10), padx=(0, 0))  #(T, B)  (L, R)
-        loadtxt.grid(row=3, column=2, pady=(0, 10), padx=(0, 10))
-        loadbrowsebtn.grid(row=3, column=3, pady=(0, 10), padx=(0, 10))
-        loadbtn.grid(row=3, column=4, pady=(0, 10), padx = (0, 10))
+                                    text='Load Settings', underline=0, command=self.load_settings)
+        
+        loadlbl.grid(row=8, column=1, pady=(0, 10), padx=(0, 0))  #(T, B)  (L, R)
+        loadtxt.grid(row=8, column=2, pady=(0, 10), padx=(0, 10))
+        loadbrowsebtn.grid(row=8, column=3, pady=(0, 10), padx=(0, 10))
+        loadbtn.grid(row=8, column=4, pady=(0, 10), padx = (0, 10))
         #settings_toolip.bind(loadbtn, 'Your name \nEnter your name')
         #loadbtn.bind("<Enter>", self.load_enter)
         # loadbtn.bind("<Leave>", self.load_leave)
@@ -210,10 +252,10 @@ class Application(ttk.Frame):
 
         savebtn = ttk.Button(settings_frame,  # should create json from textboxes, then save self.setting
                              text='Save Settings', underline=0, command=self.set_settingsfile)
-        savelbl.grid(row=4, column=1, pady=(0, 10), padx=(0, 0))  #(T, B)  (L, R)
-        savetxt.grid(row=4, column=2, pady=(0, 10), padx=(0, 10))
+        savelbl.grid(row=9, column=1, pady=(0, 10), padx=(0, 0))  #(T, B)  (L, R)
+        savetxt.grid(row=9, column=2, pady=(0, 10), padx=(0, 10))
         savebrowsebtn.grid(row=3, column=3, pady=(0, 10), padx=(0, 10))
-        savebtn.grid(row=4, column=4, pady=(0, 10), padx = (0, 10))
+        savebtn.grid(row=9, column=4, pady=(0, 10), padx = (0, 10))
         #settings_toolip.bind(savebtn, 'Saves the current settings to a file. \nRandom name generated, change if desired.')
 
         # Row for reset
@@ -288,7 +330,7 @@ class Application(ttk.Frame):
     """files = filedialog.askopenfilenames(parent=self.master,title='Choose
         the Music file(s)', filetypes=(("xml files", "*.xml")))"""
 
-    def load_enter(self, event: str) -> None:
+    def load_enter(self, event: tkEvent) -> None:
         print('Hovering over load...')
 
     def get_settingsfile(self) -> pathType:
@@ -310,15 +352,24 @@ class Application(ttk.Frame):
         # v.set(text)
         # s = v.get()
 
-    def update_settings(self) -> None:
+    def load_settings(self) -> None:
         # print(self.settings['color'])
         with open(self.settings_file, 'r') as f:
             settings_json: simpDict = dict(json.load(f))
             # reveal_type(settings_json)
             self.settings = settings_json
+            default_font = matplotlib.font_manager.FontProperties()
+            families = ['serif', 'sans-serif',
+                        'cursive', 'fantasy', 'monospace']
+            self.fontvar.set(self.settings['color'])
+            self.fontvar.set(self.settings['color'])
+            self.fontvar.set(self.settings['color'])
+            self.fontsizevar.set(self.settings['size'])
             # print(self.settings['color'])
-            # return self.settings
 
+    def update_settings(self, event: tkEvent) -> None:
+        self.settings['size'] = self.fontsizevar.get()
+        print(self.settings['size'])
 
     def set_settingsfile(self) -> None:
         """Get text for savepath with browse btn,
@@ -330,5 +381,6 @@ class Application(ttk.Frame):
     def reset_defaultsettingsfile(self) -> None:
         # self.default_settings_json = plot.get_json_settings('default_settings.json')
         self.settings = self.default_settings
-        print(self.settings['color'])
-        print('Graphical settings reset to default')
+
+        print(
+            f'Graphical settings reset to default (colour: {self.settings["color"]}, size: {self.settings["size"]})')

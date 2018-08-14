@@ -32,15 +32,16 @@ def save_json_settings(json_file: pathType, setting_dict: simpDict) -> None:
         with open(json_file, 'w') as jf:
             jf.write(setting_json)
 
+"""
 fontlab_default: simpDict = dict(family='sans-serif', color='darkred', weight='normal', size=12)
 
-fontlab: Opt[simpDict] = get_json_settings('settings.json')
+fontlab: Opt[simpDict] = get_json_settings('settings\settings.json')
 if fontlab is None:
     fontlab = fontlab_default
 # print(fontlab)
+"""
 
-
-def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output_dir: str = None,  settings: simpDict = fontlab_default) -> None:
+def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output_dir: str = None,  settings: Opt[simpDict] = None) -> None:
     """"""
 
     fig = plt.figure()
@@ -68,7 +69,7 @@ def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output
     # plt.show()
 
 
-def make_nyquist_plot(imped_imag: np.ndarray, imped_real: np.ndarray, params: paramsTup, output_dir: pathType = None) -> None:
+def make_nyquist_plot(imped_imag: np.ndarray, imped_real: np.ndarray, params: paramsTup, output_dir: pathType = None, settings: Opt[simpDict] = None) -> None:
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
 
@@ -79,8 +80,8 @@ def make_nyquist_plot(imped_imag: np.ndarray, imped_real: np.ndarray, params: pa
     # (filename_strip, solv, elec, ref_elec, work_elec) = params
     # expt_vars = f"WE = {work_elec} \nRE = {ref_elec} \nElectrolyte = {elec} \nSolvent = {solv}"
     # plt.title(f"Nyquist plot of {work_elec} in {elec} ({solv}) vs {ref_elec} reference", y=1.05)
-    plt.xlabel(f'Real Impedance (Ohms)', fontdict=fontlab)
-    plt.ylabel('Imaginary Impedance (Ohms)', fontdict=fontlab)
+    plt.xlabel(f'Real Impedance (Ohms)', fontdict=settings)
+    plt.ylabel('Imaginary Impedance (Ohms)', fontdict=settings)
     plt.savefig(f'{output_dir}/{filename_strip}' + 'nyquist_auto.png',
                 bbox_inches='tight', dpi=500, transparent=True)
 
@@ -92,7 +93,7 @@ def make_nyquist_plot(imped_imag: np.ndarray, imped_real: np.ndarray, params: pa
 
 # import numba
 # @numba.jit
-def make_bode_plot(freq_log: np.ndarray, imped_log: np.ndarray, phase: np.ndarray, params: paramsTup, output_dir: pathType = None) -> None:
+def make_bode_plot(freq_log: np.ndarray, imped_log: np.ndarray, phase: np.ndarray, params: paramsTup, output_dir: pathType = None, settings: Opt[simpDict] = None) -> None:
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     xmin, xmax = plt.xlim()     # pylint: disable=W0612
@@ -108,10 +109,10 @@ def make_bode_plot(freq_log: np.ndarray, imped_log: np.ndarray, phase: np.ndarra
     expt_vars = f"WE = {work_elec} \nRE = {ref_elec} \nElectrolyte = {elec} \nSolvent = {solv}"
     plt.title(f"Bode plot of {work_elec} in {elec} ({solv}) vs {ref_elec} reference", y=1.05)
 
-    plt.xlabel(f'Log Frequency (Hz)', fontdict=fontlab)
+    plt.xlabel(f'Log Frequency (Hz)', fontdict=settings)
 
-    plt.ylabel('Log Impedance (Ohms)', fontdict=fontlab)
-    plt.text(xmax * 1.1, 0, expt_vars, fontdict=fontlab, withdash=False)
+    plt.ylabel('Log Impedance (Ohms)', fontdict=settings)
+    plt.text(xmax * 1.1, 0, expt_vars, fontdict=settings, withdash=False)
 
     plt.savefig(f"{output_dir}/{filename_strip}" + 'bode_auto.png', bbox_inches='tight', dpi=500, transparent=True)
 

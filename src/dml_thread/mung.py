@@ -153,7 +153,7 @@ fontlab_default: simpDict = dict(
 def open_mung_save(data_dir: pathType,
                    filename: pathType,
                    output_dir: Opt[pathType] = None,
-                   settings: simpDict = fontlab_default
+                   settings: Opt[simpDict] = None
                    ) -> None:
     """"""
     cv_file = open_file_numpy(data_dir, filename)
@@ -164,7 +164,7 @@ def open_mung_save(data_dir: pathType,
             (x_var, y_var) = data
             print(settings)
             plot.make_cv_plot(x_var, y_var, params,
-                              output_dir, settings=settings)
+                              output_dir, settings)
         elif data is not None and len(data) == 5:
             write_imp_data(data, params, output_dir)
             write_zview_data(data, params, output_dir)
