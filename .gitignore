@@ -8,7 +8,7 @@
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
+*.py[co]
 *$py.class
 
 # C extensions
@@ -60,7 +60,7 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.log
+# *.log
 local_settings.py
 db.sqlite3
 
