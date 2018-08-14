@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from typing import Tuple #, override, get_type_hints
 from typing import Optional as Opt
-from dml_thread.types import simpDict, pathType
+from dml_thread.types import simpDict, pathType, paramsTup
 
 
 data_dir: pathType = os.getcwd()  # cast(pathType, os.getcwd())
@@ -40,7 +40,7 @@ if fontlab is None:
 # print(fontlab)
 
 
-def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: Tuple[str, ...], output_dir: str = None,  settings: simpDict = fontlab_default) -> None:
+def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output_dir: str = None,  settings: simpDict = fontlab_default) -> None:
     """"""
 
     fig = plt.figure()
@@ -68,7 +68,7 @@ def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: Tuple[str, ...], 
     # plt.show()
 
 
-def make_nyquist_plot(imped_imag: np.ndarray, imped_real: np.ndarray, params: Tuple[str, ...], output_dir: pathType = None) -> None:
+def make_nyquist_plot(imped_imag: np.ndarray, imped_real: np.ndarray, params: paramsTup, output_dir: pathType = None) -> None:
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
 
@@ -92,7 +92,7 @@ def make_nyquist_plot(imped_imag: np.ndarray, imped_real: np.ndarray, params: Tu
 
 # import numba
 # @numba.jit
-def make_bode_plot(freq_log: np.ndarray, imped_log: np.ndarray, phase: np.ndarray, params: Tuple[str, ...], output_dir: pathType = None) -> None:
+def make_bode_plot(freq_log: np.ndarray, imped_log: np.ndarray, phase: np.ndarray, params: paramsTup, output_dir: pathType = None) -> None:
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     xmin, xmax = plt.xlim()     # pylint: disable=W0612

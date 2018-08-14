@@ -3,17 +3,9 @@ import csv
 # cimport cython
 from typing import Tuple, NamedTuple
 from typing import Optional as Opt
-from dml_thread.types import pathType, simpDict
+from dml_thread.types import pathType, simpDict, paramsTup
 
 from dml_thread import plot
-
-paramsTup = NamedTuple('paramsTup', [
-        ('filename_strip', str),
-        ('solv', str),
-        ('elec', str),
-        ('ref_elec', str),
-        ('work_elec', str)
-])
 
 # @cython.ccall      
 def open_file_numpy(data_dir: pathType, filename: pathType) -> Opt[np.ndarray]:
