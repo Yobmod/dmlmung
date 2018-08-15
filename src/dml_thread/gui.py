@@ -23,7 +23,8 @@ from dml_thread.types import simpDict,  pathType, tkEvent
 
 from dml_thread import somecython, mung, plot
 from dmltk import panels
-import dmltk
+from tkcolorpicker.colorpicker import askcolor
+# from tkinter.colorchooser import askcolor
 
 from concurrent.futures import ProcessPoolExecutor  # . ThreadPoolExecutor
 from multiprocessing import cpu_count
@@ -164,8 +165,23 @@ class Application(ttk.Frame):
 
         tButton = ttk.Button(frame,
                              text='Test',
-                             command=lambda: print(self.settings['size']))
+                             command= self.print_settings)
         tButton.grid(row=6, column=3)
+
+    def print_settings(self) -> None:
+        print(self.settings['size'])
+        print(self.settings['color'])
+
+    def summon_colorpick(self) -> None:
+        # font_color_picked = askcolor(color="red", parent=self, title="Color Chooser", alpha=True)
+        font_color_picked = askcolor(parent=self, color="red", title="Color Chooser")
+
+        print(font_color_picked)
+        # font_RGBA = font_color_picked[0]
+        font_hex = font_color_picked[1]
+        # font_RGB = font_color_picked[0][0:3]
+        self.fontcolorvar.set(font_hex)
+        self.settings['color'] = self.fontcolorvar.get()
 
     def _create_settings_tab(self, nb: ttk.Notebook) -> None:
         """widgets to be displayed on 'Settings'"""
@@ -197,8 +213,11 @@ class Application(ttk.Frame):
             settings_frame, textvariable=self.fontsizevar, values=fontsize_options, height=16, width=6, justify=RIGHT, validatecommand=self.update_settings)
         fontsizemenu.bind("<<ComboboxSelected>>", self.update_settings)
 
+        self.fontcolorvar = tk.StringVar()
         fontcolorlbl = ttk.Label(settings_frame, 
-                            text=f'Font-size:  {self.settings["color"]}')
+                            text=f'Font-colour: ')
+        fontcolorpick = ttk.Button(settings_frame,
+                                 text="Choose", command=self.summon_colorpick)
 
         valign_options = ['center', 'top', 'bottom', 'baseline']
         self.fontvalignvar = tk.StringVar(settings_frame)
@@ -215,6 +234,7 @@ class Application(ttk.Frame):
 
         fontlbl.grid(row=1, column=1, pady=(0, 0), padx=(0, 0))
         fontcolorlbl.grid(row=1, column=2, pady=(0, 0), padx=(0, 0))
+        fontcolorpick.grid(row=1, column=3, pady=(0, 0), padx=(0, 0))
 
         fontsizelbl.grid(row=2, column=1, pady=(0, 0), padx=(0, 0))
         fontsizemenu.grid(row=2, column=2, pady=(0, 0), padx=(0, 0))
@@ -361,7 +381,7 @@ class Application(ttk.Frame):
             default_font = matplotlib.font_manager.FontProperties()
             families = ['serif', 'sans-serif',
                         'cursive', 'fantasy', 'monospace']
-            self.fontvar.set(self.settings['color'])
+            self.fontcolorvar.set(self.settings['color'])
             self.fontvar.set(self.settings['color'])
             self.fontvar.set(self.settings['color'])
             self.fontsizevar.set(self.settings['size'])
@@ -382,5 +402,4 @@ class Application(ttk.Frame):
         # self.default_settings_json = plot.get_json_settings('default_settings.json')
         self.settings = self.default_settings
 
-        print(
-            f'Graphical settings reset to default (colour: {self.settings["color"]}, size: {self.settings["size"]})')
+        print(f'Graphical settings reset to default (colour: {self.settings["color"]}, size: {self.settings["size"]})')
