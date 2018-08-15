@@ -31,12 +31,16 @@ from multiprocessing import cpu_count
 # print(cpu_count())  # laptop = 8
 
 
+def batch_num_files(data_dir: pathType) -> int:
+    num_files = len([fily for fily in os.listdir(data_dir)
+                         if fily.endswith((".txt", ".csv", ".tsv"))])
+    return num_files
+
 def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, settings: Opt[simpDict] = None) -> None:
     """"""
     print(output_dir)
     mung_time = time.perf_counter()
-    num_files = len([fily for fily in os.listdir(data_dir)
-                     if fily.endswith((".txt", ".csv", ".tsv"))])
+    num_files = batch_num_files(data_dir)
 
     if num_files > 0:
         print(f"{num_files} found in {data_dir}. Munging data  ...")
@@ -145,8 +149,22 @@ class Application(ttk.Frame):
 
         goButton = ttk.Button(frame,
                               text='Go',
-                              command=lambda: thread_open_mung_save(self.data_dir, self.out_dir, self.settings))
+                              command= self.go_batch)
         goButton.grid(row=4, column=3)
+
+        self.batchprogvar = tk.DoubleVar()
+        batchprogbar = ttk.Progressbar(frame, variable =self.batchprogvar, maximum=50)
+        batchprogbar.grid(row=4, column=4)
+
+    def go_batch(self, num_files: int = None) -> None:
+        if num_files is None:
+            num_files = batch_num_files(self.data_dir)
+        #batchprog = ttk.Progressbar(self, maximum=num_files)
+        #batchprog.start(interval=1000)
+        #batchprog.step(amount=1.0)
+        thread_open_mung_save(self.data_dir, self.out_dir, self.settings)
+        #batchprog.stop()
+        
 
     def _create_batch_tab(self, nb: ttk.Notebook) -> None:
         """widgets to be displayed on 'Batch'"""
