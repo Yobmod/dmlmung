@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 numpy = "*"
-matplotlib = "*"
+matplotlib = "==2.2.3"
 cython = "*"
 pillow = "*"
 pmw = "*"
@@ -21,4 +21,4 @@ coverage = "*"
 cython = "*"
 
 [requires]
-python_version = "3.6.6"
+python_version = "3.6"
