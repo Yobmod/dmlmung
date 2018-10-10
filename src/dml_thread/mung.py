@@ -1,22 +1,24 @@
 import numpy as np
 import csv
 # cimport cython
-from typing import Tuple, NamedTuple
+from typing import Tuple  # , NamedTuple
 from typing import Optional as Opt
-from dml_thread.types import pathType, simpDict, paramsTup
+from dml_thread.mytypes import pathType, simpDict, paramsTup
 
 from dml_thread import plot
 
-# @cython.ccall      
+# @cython.ccall
+
+
 def open_file_numpy(data_dir: pathType, filename: pathType) -> Opt[np.ndarray]:
     """ """
     file = data_dir + "/" + filename
     if filename.endswith((".csv", )):   # ".txt")):
         with open(file, 'r') as source:
             data_array: np.ndarray = np.loadtxt(source,
-                                            delimiter=",",
-                                            skiprows=20,
-                                            dtype=float)
+                                                delimiter=",",
+                                                skiprows=20,
+                                                dtype=float)
         return data_array
     else:
         return None
@@ -38,7 +40,7 @@ def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
         # number = data_array[:, [0]]
         # signdif = data_array[:, [4]]
         # time = data_array[:, [5]]
-        phase_rads = np.multiply(phase, (np.pi/180))
+        phase_rads = np.multiply(phase, (np.pi / 180))
         freq_log = np.log10(freq)
         imped_log = np.log10(imped)
         phase_cos = np.cos(phase_rads)
@@ -51,7 +53,7 @@ def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
 
     data: Opt[Tuple[np.ndarray, ...]]
     if x_array is not None and y_array is not None:  # both not falsey
-        data = (x_array, y_array) # if x_array is not None else None
+        data = (x_array, y_array)  # if x_array is not None else None
     elif imped is not None and phase is not None:
         data = (freq_log, imped_log, phase, imag_imped, real_imped)
     else:
@@ -59,7 +61,8 @@ def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
     return data
 
 
-def get_params(filename: pathType) -> paramsTup:  # Tuple[str, str, str, str, str]:
+# Tuple[str, str, str, str, str]:
+def get_params(filename: pathType) -> paramsTup:
     """"""
     filename_strip = filename[:-4]
     if "agcl" in filename_strip:
@@ -97,27 +100,28 @@ def get_params(filename: pathType) -> paramsTup:  # Tuple[str, str, str, str, st
 
 def write_imp_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> None:
     """"""
-    #(filename_strip, solv, elec, ref_elec, work_elec) = params
+    # (filename_strip, solv, elec, ref_elec, work_elec) = params
     filename_strip = params.filename_strip
     if len(data) == 5:
         (freq_log, imped_log, phase, imag_imped, real_imped) = data
         with open(f"{output_dir}/{filename_strip}.csv", 'w') as csvfile:
             csvwriter = csv.writer(csvfile, delimiter=',')
             for x in range(len(freq_log)):
-                csvwriter.writerow([float(freq_log[x]), 
-                                    float(imped_log[x]), 
-                                    float(phase[x]), 
-                                    float(imag_imped[x]), 
+                csvwriter.writerow([float(freq_log[x]),
+                                    float(imped_log[x]),
+                                    float(phase[x]),
+                                    float(imag_imped[x]),
                                     float(real_imped[x])])
             print(f"{filename_strip} impedance csv done")
 
 
 def write_zview_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> None:
-    """""" 
+    """"""
     # (filename_strip, solv, elec, ref_elec, work_elec) = params
     filename_strip = params.filename_strip
     if len(data) == 5:
-        (freq_log, imped_log, phase, imag_imped, real_imped) = data     # pylint: disable=W0612
+        (freq_log, imped_log, phase, imag_imped,
+         real_imped) = data     # pylint: disable=W0612
         freq = 10 ** (freq_log)
         with open(f"{output_dir}/{filename_strip}_zveiw.csv", 'w', newline='') as csvfile:
             csvwriter = csv.writer(csvfile)
@@ -132,9 +136,9 @@ def write_zview_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir
             csvwriter.writerow([0, 2, 0, 1, 0.1, 100000])
             csvwriter.writerow([78])
             for x in range(len(freq_log)):
-                csvwriter.writerow([float(freq[x]), 0, 0, 0, float(real_imped[x]), float(-imag_imped[x]), 0, 0, 0])
+                csvwriter.writerow([float(freq[x]), 0, 0, 0, float(
+                    real_imped[x]), float(-imag_imped[x]), 0, 0, 0])
             print(f"{filename_strip} zveiw csv done")
-
 
 
 def fourier_smooth(x_var: np.ndarray, y_var: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -202,8 +206,8 @@ if __name__ == "__main__":
     import os
     dd = os.getcwd()
     ee = pathType(f"{dd}/test")
-    
-    for ff in os.listdir(ee): 
+
+    for ff in os.listdir(ee):
         array = open_file_numpy(ee, ff)
         get_data_numpy(array)
 

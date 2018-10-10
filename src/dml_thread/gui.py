@@ -7,19 +7,17 @@ from random import randint
 
 import tkinter as tk
 from tkinter.filedialog import askdirectory, askopenfilename, askopenfilenames
-from tkinter import X, Y, TOP, BOTTOM, LEFT, RIGHT, HORIZONTAL, VERTICAL, CENTER, END, BOTH, ACTIVE, WORD, N, E, NSEW, EW
+from tkinter import Y, TOP, LEFT, RIGHT, VERTICAL, CENTER, END, BOTH, WORD, N
 import tkinter.ttk as ttk
 # import Pmw
-import matplotlib
-matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+import matplotlib; matplotlib.use('TkAgg')
+# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 
 # import pyside2
-
 from typing import Union, List, cast  # ,Union, override, get_type_hints
 from typing import Optional as Opt
 # , Num, simpTypes, simpList, compList, compDict,
-from dml_thread.types import simpDict,  pathType, tkEvent
+from dml_thread.mytypes import simpDict,  pathType, tkEvent
 
 from dml_thread import somecython, mung, plot
 from dmltk import panels
@@ -33,8 +31,9 @@ from multiprocessing import cpu_count
 
 def batch_num_files(data_dir: pathType) -> int:
     num_files = len([fily for fily in os.listdir(data_dir)
-                         if fily.endswith((".txt", ".csv", ".tsv"))])
+                     if fily.endswith((".txt", ".csv", ".tsv"))])
     return num_files
+
 
 def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, settings: Opt[simpDict] = None) -> None:
     """"""
@@ -73,11 +72,12 @@ class Application(ttk.Frame):
 
         self.data_dir: pathType = os.getcwd() + R'\data'
         self.out_dir: pathType = self.data_dir + R'\output'
-        self.default_settings = plot.get_json_settings(R'\settings\default_settings.json')
+        self.default_settings = plot.get_json_settings(
+            R'\settings\default_settings.json')
         self.settings_file = R'.\settings\settings.json'
         self.settings: simpDict = plot.get_json_settings(self.settings_file)
 
-        if master is not None: 
+        if master is not None:
             self.master = master
 
         self.master.title('Dml Mung')
@@ -90,11 +90,11 @@ class Application(ttk.Frame):
             "TNotebook": {"configure": {"tabmargins": [5, 5, 5, 0]}},
             "TNotebook.Tab": {"configure": {"padding": [10, 5]}, }})  # tab size [x, y]
         # style.theme_use("MyStyle")
-        #style.configure("Green.TLabel", foreground="white", background="green")
+        # style.configure("Green.TLabel", foreground="white", background="green")
 
         """when initated, try open a json to get the default and output dirs.
         if not found, use hardcoded defaults/os.getcwd().
-        Make button so can change default dir and output dir and save the json. 
+        Make button so can change default dir and output dir and save the json.
 
         button save matplotlib settings (also overwrite settings.json)
         Make input (radio?) for potentiostat types: Autolab, Zahner, utgard smallones, other(contact me)
@@ -105,8 +105,8 @@ class Application(ttk.Frame):
         quitButton = ttk.Button(self.master,
                                       text='Quit',
                                      command=self.quit, #style="Green.TLabel")
-        ) 
-        quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10) 
+        )
+        quitButton.grid(row=6, column=3, columnspan=1, ipady=10, ipadx=10)
         """
 
     def _create_widgets(self) -> None:
@@ -149,22 +149,22 @@ class Application(ttk.Frame):
 
         goButton = ttk.Button(frame,
                               text='Go',
-                              command= self.go_batch)
+                              command=self.go_batch)
         goButton.grid(row=4, column=3)
 
         self.batchprogvar = tk.DoubleVar()
-        batchprogbar = ttk.Progressbar(frame, variable =self.batchprogvar, maximum=50)
+        batchprogbar = ttk.Progressbar(
+            frame, variable=self.batchprogvar, maximum=100)
         batchprogbar.grid(row=4, column=4)
 
     def go_batch(self, num_files: int = None) -> None:
         if num_files is None:
             num_files = batch_num_files(self.data_dir)
-        #batchprog = ttk.Progressbar(self, maximum=num_files)
-        #batchprog.start(interval=1000)
-        #batchprog.step(amount=1.0)
+        # batchprog = ttk.Progressbar(self, maximum=num_files)
+        # batchprog.start(interval=1000)
+        # batchprog.step(amount=1.0)
         thread_open_mung_save(self.data_dir, self.out_dir, self.settings)
-        #batchprog.stop()
-        
+        # batchprog.stop()
 
     def _create_batch_tab(self, nb: ttk.Notebook) -> None:
         """widgets to be displayed on 'Batch'"""
@@ -183,7 +183,7 @@ class Application(ttk.Frame):
 
         tButton = ttk.Button(frame,
                              text='Test',
-                             command= self.print_settings)
+                             command=self.print_settings)
         tButton.grid(row=6, column=3)
 
     def print_settings(self) -> None:
@@ -192,7 +192,8 @@ class Application(ttk.Frame):
 
     def summon_colorpick(self) -> None:
         # font_color_picked = askcolor(color="red", parent=self, title="Color Chooser", alpha=True)
-        font_color_picked = askcolor(parent=self, color="red", title="Color Chooser")
+        font_color_picked = askcolor(
+            parent=self, color="red", title="Color Chooser")
 
         print(font_color_picked)
         # font_RGBA = font_color_picked[0]
@@ -208,19 +209,19 @@ class Application(ttk.Frame):
         settings_frame.columnconfigure((0, 1), weight=1, uniform=1)
         nb.add(settings_frame, text='Settings', underline=0,
                padding=2)  # underline = shortcut char index
-        #settings_toolip = Pmw.Balloon(settings_frame)
+        # settings_toolip = Pmw.Balloon(settings_frame)
         # Row for Msg
         msg = ["Please change settings and click save. To return to default settings, click reset. \nSettings will be applied to File and Batch plots"]   #
-        settingslbl = ttk.Label(settings_frame, 
-                                # wraplength='4i', 
-                                justify=CENTER, anchor=N, 
+        settingslbl = ttk.Label(settings_frame,
+                                # wraplength='4i',
+                                justify=CENTER, anchor=N,
                                 text=''.join(msg))
-        settingslbl.grid(row=0, column=0, columnspan=5, sticky='new', pady=(10, 10), padx=(10, 10))
-
+        settingslbl.grid(row=0, column=0, columnspan=5,
+                         sticky='new', pady=(10, 10), padx=(10, 10))
 
         # Rows/cols for settings
 
-        self.fontvar = tk.StringVar(settings_frame, 
+        self.fontvar = tk.StringVar(settings_frame,
                                     value=f'Font: {self.settings["family"]}')
         fontlbl = ttk.Label(settings_frame, textvariable=self.fontvar)
 
@@ -232,20 +233,22 @@ class Application(ttk.Frame):
         fontsizemenu.bind("<<ComboboxSelected>>", self.update_settings)
 
         self.fontcolorvar = tk.StringVar()
-        fontcolorlbl = ttk.Label(settings_frame, 
-                            text=f'Font-colour: ')
+        fontcolorlbl = ttk.Label(settings_frame,
+                                 text=f'Font-colour: ')
         fontcolorpick = ttk.Button(settings_frame,
-                                 text="Choose", command=self.summon_colorpick)
+                                   text="Choose", command=self.summon_colorpick)
 
         valign_options = ['center', 'top', 'bottom', 'baseline']
         self.fontvalignvar = tk.StringVar(settings_frame)
         fontvalignlbl = ttk.Label(settings_frame, text='Axes font colour: ')
-        fontvalignmenu = ttk.OptionMenu(settings_frame, self.fontvalignvar, *valign_options)
+        fontvalignmenu = ttk.OptionMenu(
+            settings_frame, self.fontvalignvar, *valign_options)
 
         halign_options = ['center', 'right', 'left']
         self.fonthalignvar = tk.StringVar(settings_frame)
         fonthalignlbl = ttk.Label(settings_frame, text='Axes font colour: ')
-        fonthalignmenu = ttk.OptionMenu( settings_frame, self.fonthalignvar, *halign_options)
+        fonthalignmenu = ttk.OptionMenu(
+            settings_frame, self.fonthalignvar, *halign_options)
 
         """    "style or fontstyle": "normal", | 'italic' | 'oblique']
         """
@@ -263,44 +266,47 @@ class Application(ttk.Frame):
         fonthalignlbl.grid(row=4, column=1, pady=(0, 0), padx=(0, 0))
         fonthalignmenu.grid(row=4, column=2, pady=(0, 0), padx=(0, 0))
 
-        # Row for load 
+        # Row for load
         loadlbl = ttk.Label(settings_frame, text='Load Settings from: ')
-        loadtxt = tk.Entry(settings_frame, textvariable='', width=40, justify=LEFT)
+        loadtxt = tk.Entry(settings_frame, textvariable='',
+                           width=40, justify=LEFT)
         loadtxt.insert(0, self.settings_file)
         loadbrowsebtn = ttk.Button(settings_frame,
                                    text='Browse', command=lambda: self.populate_settingspath(loadtxt))
         loadbtn = ttk.Button(settings_frame,  # populate text box and update self.settings too
-                                    text='Load Settings', underline=0, command=self.load_settings)
-        
-        loadlbl.grid(row=8, column=1, pady=(0, 10), padx=(0, 0))  #(T, B)  (L, R)
+                             text='Load Settings', underline=0, command=self.load_settings)
+
+        loadlbl.grid(row=8, column=1, pady=(0, 10),
+                     padx=(0, 0))  # (T, B)  (L, R)
         loadtxt.grid(row=8, column=2, pady=(0, 10), padx=(0, 10))
         loadbrowsebtn.grid(row=8, column=3, pady=(0, 10), padx=(0, 10))
-        loadbtn.grid(row=8, column=4, pady=(0, 10), padx = (0, 10))
-        #settings_toolip.bind(loadbtn, 'Your name \nEnter your name')
-        #loadbtn.bind("<Enter>", self.load_enter)
+        loadbtn.grid(row=8, column=4, pady=(0, 10), padx=(0, 10))
+        # settings_toolip.bind(loadbtn, 'Your name \nEnter your name')
+        # loadbtn.bind("<Enter>", self.load_enter)
         # loadbtn.bind("<Leave>", self.load_leave)
 
         # Row for save
         savelbl = ttk.Label(settings_frame, text='Save Settings to: ')
         savetxt = tk.Entry(settings_frame, textvariable='',
                            width=40, justify=LEFT)
-        savetxt.insert(0, f'{self.settings_file[:-5]}_{datetime.now().year}_{randint(0, 1000)}.json')
+        savetxt.insert(
+            0, f'{self.settings_file[:-5]}_{datetime.now().year}_{randint(0, 1000)}.json')
         savebrowsebtn = ttk.Button(settings_frame,
                                    text='Browse', command=lambda: self.populate_settingspath(loadtxt))
 
         savebtn = ttk.Button(settings_frame,  # should create json from textboxes, then save self.setting
                              text='Save Settings', underline=0, command=self.set_settingsfile)
-        savelbl.grid(row=9, column=1, pady=(0, 10), padx=(0, 0))  #(T, B)  (L, R)
+        savelbl.grid(row=9, column=1, pady=(0, 10),
+                     padx=(0, 0))  # (T, B)  (L, R)
         savetxt.grid(row=9, column=2, pady=(0, 10), padx=(0, 10))
         savebrowsebtn.grid(row=3, column=3, pady=(0, 10), padx=(0, 10))
-        savebtn.grid(row=9, column=4, pady=(0, 10), padx = (0, 10))
-        #settings_toolip.bind(savebtn, 'Saves the current settings to a file. \nRandom name generated, change if desired.')
+        savebtn.grid(row=9, column=4, pady=(0, 10), padx=(0, 10))
+        # settings_toolip.bind(savebtn, 'Saves the current settings to a file. \nRandom name generated, change if desired.')
 
         # Row for reset
-        resetbtn = ttk.Button(settings_frame, 
-                                text='Reset', underline=0, command=self.reset_defaultsettingsfile)
+        resetbtn = ttk.Button(settings_frame,
+                              text='Reset', underline=0, command=self.reset_defaultsettingsfile)
         resetbtn.grid(row=5, column=4, pady=(0, 10), padx=(0, 10))
-
 
     def _create_misc_tab(self, nb: ttk.Notebook) -> None:
         """widgets to be displayed on 'Misc'"""
@@ -335,7 +341,7 @@ class Application(ttk.Frame):
             a_num = input("input number, press enter ")
             try:
                 a_num = int(a_num)
-            except:
+            except Exception:
                 continue
             else:
                 b_num: int = a_num
@@ -396,9 +402,8 @@ class Application(ttk.Frame):
             settings_json: simpDict = dict(json.load(f))
             # reveal_type(settings_json)
             self.settings = settings_json
-            default_font = matplotlib.font_manager.FontProperties()
-            families = ['serif', 'sans-serif',
-                        'cursive', 'fantasy', 'monospace']
+            # default_font = matplotlib.font_manager.FontProperties()
+            # families = ['serif', 'sans-serif', 'cursive', 'fantasy', 'monospace']
             self.fontcolorvar.set(self.settings['color'])
             self.fontvar.set(self.settings['color'])
             self.fontvar.set(self.settings['color'])
@@ -420,4 +425,5 @@ class Application(ttk.Frame):
         # self.default_settings_json = plot.get_json_settings('default_settings.json')
         self.settings = self.default_settings
 
-        print(f'Graphical settings reset to default (colour: {self.settings["color"]}, size: {self.settings["size"]})')
+        print(
+            f'Graphical settings reset to default (colour: {self.settings["color"]}, size: {self.settings["size"]})')

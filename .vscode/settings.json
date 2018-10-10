@@ -1,0 +1,135 @@
+{
+    "python.pythonPath": "C:\\Users\\laventin\\.virtualenvs\\dmlmung-KXwa427e\\Scripts\\python.exe",
+    "python.linting.mypyEnabled": true,
+"python.linting.enabled": true,
+"python.linting.pydocstyleEnabled": false,
+"python.linting.pep8Enabled": false,
+"python.linting.flake8Enabled": true,
+"python.linting.pylamaEnabled": true,
+"python.linting.pylintEnabled": false,
+"editor.fontSize": 16,
+"window.zoomLevel": 1,
+"editor.multiCursorModifier": "ctrlCmd",
+"editor.formatOnPaste": true,
+"git.confirmSync": false,
+"git.enableSmartCommit": true,
+"workbench.colorTheme": "Chromodynamics",
+"workbench.iconTheme": "material-icon-theme",
+"editor.tokenColorCustomizations": {
+    "textMateRules": [
+        {
+            "name": "Comment",
+            "scope": "comment",
+            "settings": {
+                "foreground": "#1c4e27",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": "variable.language.this",
+            "settings": {
+                "foreground": "#FF0000"
+            }
+        }
+    ]
+},
+"editor.renderWhitespace": "all",
+"sync.gist": "091b90e5a361260a507b3a1240ebf68f",
+"sync.autoDownload": false,
+"sync.autoUpload": false,
+"sync.forceDownload": false,
+"sync.quietSync": false,
+"sync.askGistName": false,
+"sync.removeExtensions": true,
+"sync.syncExtensions": true,
+"editor.wordWrapColumn": 120,
+"python.autoComplete.addBrackets": true,
+"python.globalModuleInstallation": true,
+"code-runner.clearPreviousOutput": true,
+"python.jediEnabled": false,
+"python.jediMemoryLimit": -1,
+
+    "python.unitTest.promptToConfigure": true,
+    "python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.unittestEnabled": false,
+    "python.unitTest.unittestArgs": [
+        "-s",
+        "./myplayer",
+        "-p",
+        "test*.py",
+    ],
+    "python.unitTest.pyTestEnabled": true,
+    "todohighlight.keywords": [
+        {
+            "text": "Union",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "Any",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "List",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "Tuple",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "Any",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "Optional",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "Opt",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "List",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "Dict",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "httpResponse",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "jsonResponse",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "HTML",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "cast",
+            "color": "green",
+            "backgroundColor": "",
+        },
+        {
+            "text": "AnyStr",
+            "color": "green",
+            "backgroundColor": "",
+        },
+    ]
+
+}

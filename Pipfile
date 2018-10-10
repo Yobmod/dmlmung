@@ -6,19 +6,24 @@ name = "pypi"
 [packages]
 numpy = "*"
 matplotlib = "==2.2.3"
-cython = "*"
 pillow = "*"
 pmw = "*"
+python-dotenv = "*"
 # pyside2 = "*"
 
 [dev-packages]
-pylama = "*"
-mypy = "*"
-pipenv = "*"
-pyinstaller = "*"
-pytest = "*"
-coverage = "*"
 cython = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-sugar = "*"
+pytest-xdist = "*"
+flake8 = "*"
+pylama = "*"
+mypy = {editable = true, ref = "master", git = "https://github.com/python/mypy.git"}
+autopep8 = "*"
+pyinstaller = "*"
+pipenv = "*"
+pip = "==18.0"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
