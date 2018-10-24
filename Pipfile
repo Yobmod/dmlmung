@@ -9,8 +9,9 @@ matplotlib = "*"
 
 [dev-packages]
 pipenv = "*"
-"flake8" = "*"
-mypy = "*"
+flake8 = "*"
+mypy = "0.641"
+typing-extensions = "*"
 
 [requires]
 python_version = "3.7"

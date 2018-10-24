@@ -1,5 +1,7 @@
 """."""
-DEBUG = True
+from typing_extensions import Final
+
+DEBUG: Final = True
 
 if DEBUG is True:
     import cProfile
