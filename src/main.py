@@ -1,25 +1,35 @@
-# import os
-# import json
-# import numpy as np
-# import matplotlib.pyplot as plt
-
-# from typing import List, Union, Dict, cast, NewType, Any  #, override, get_type_hints
-# from typing import Optional as Opt
-<<<<<<< HEAD
-# from dmlechemmods.types import simpTypes, simpList, simpDict, compList, compDict, pathType # Num
+"""."""
 DEBUG = True
-=======
-# from dmlechemmods.mytypes import simpTypes, simpList, simpDict, compList, compDict, pathType # Num
->>>>>>> d0972710d0b5140dd9c41fbd756ace6591dc3478
+
+if DEBUG is True:
+    import cProfile
 
 
-if __name__ == "__main__":
-    # import pyximport
-    # pyximport.install(pyimport=True)
-    if DEBUG == True:
-        import cProfile
-        pr = cProfile.Profile() 
-        pr.enable()
+def start_profiling() -> cProfile.Profile:
+    import cProfile
+    prof = cProfile.Profile()
+    prof.enable()
+    return prof
+
+
+def prof_to_stats(profile: cProfile.Profile) -> None:
+    """."""
+    import pstats
+    import datetime
+
+    now = datetime.datetime.now()
+    stats = pstats.Stats(profile)
+    stats.strip_dirs()
+    stats.sort_stats('cumulative')
+    stats.print_stats(15)
+    filename = f'./logs/profile_{now.day}-{now.month}-{now.year}.prof'
+    profile.dump_stats(filename)
+
+
+def main() -> None:
+    """."""
+    if DEBUG is True:
+        prof = start_profiling()
 
     import time
     start_time = time.perf_counter()
@@ -44,23 +54,18 @@ if __name__ == "__main__":
     try:
         print(f"GUI started @ {time.perf_counter() - start_time:.2f} s")
         app.mainloop()
-    except (KeyboardInterrupt, SystemExit) as ke:
+    except (KeyboardInterrupt, SystemExit) as kexc:
         print('\nApp closed with ctrl-C')
-        logger.info(repr(ke))
-    except Exception as e:
-        logger.exception(repr(e))
+        logger.info(repr(kexc))
+    except Exception as exc:
+        logger.exception(repr(exc))
         raise
     finally:
         print('DMLmung app closed')
-        if DEBUG==True:
-            pr.disable()
-            import datetime
-            import pstats
-            now = datetime.datetime.now()
-            stats = pstats.Stats(pr)
-            stats.strip_dirs()
-            stats.sort_stats('cumulative')
-            stats.print_stats(15)
-            filename = f'./logs/profile_{now.day}-{now.month}-{now.year}.prof'
-            pr.dump_stats(filename)
-            # pr.print_stats(sort='cumtime')
+        if DEBUG is True:
+            prof.disable()
+            prof_to_stats(prof)  # ; prof.print_stats(sort='cumtime')
+
+
+if __name__ == "__main__":
+    main()

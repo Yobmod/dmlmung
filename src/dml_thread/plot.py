@@ -6,11 +6,7 @@ import matplotlib.pyplot as plt
 
 # from typing import Tuple  # , override, get_type_hints
 from typing import Optional as Opt
-<<<<<<< HEAD
 from dml_thread.my_types import simpDict, pathType, paramsTup
-=======
-from dml_thread.mytypes import simpDict, pathType, paramsTup
->>>>>>> d0972710d0b5140dd9c41fbd756ace6591dc3478
 
 
 data_dir: pathType = os.getcwd()  # cast(pathType, os.getcwd())
@@ -39,14 +35,14 @@ def save_json_settings(json_file: pathType, setting_dict: simpDict) -> None:
 """
 fontlab_default: simpDict = dict(family='sans-serif', color='darkred', weight='normal', size=12)
 
-fontlab: Opt[simpDict] = get_json_settings('settings\settings.json')
+fontlab: Opt[simpDict] = get_json_settings(R'settings\settings.json')
 if fontlab is None:
     fontlab = fontlab_default
 # print(fontlab)
 """
 
 
-def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output_dir: str = None,  settings: Opt[simpDict] = None) -> None:
+def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output_dir: str = None, settings: Opt[simpDict] = None) -> None:
     """"""
 
     fig = plt.figure()

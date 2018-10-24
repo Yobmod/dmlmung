@@ -10,24 +10,15 @@ from tkinter.filedialog import askdirectory, askopenfilename, askopenfilenames
 from tkinter import Y, TOP, LEFT, RIGHT, VERTICAL, CENTER, END, BOTH, WORD, N
 import tkinter.ttk as ttk
 # import Pmw
-<<<<<<< HEAD
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTk, NavigationToolbar2Tk
-=======
-import matplotlib; matplotlib.use('TkAgg')
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
->>>>>>> d0972710d0b5140dd9c41fbd756ace6591dc3478
 
 # import pyside2
 from typing import Union, List, cast  # ,Union, override, get_type_hints
 from typing import Optional as Opt
 # , Num, simpTypes, simpList, compList, compDict,
-<<<<<<< HEAD
 from dml_thread.my_types import simpDict,  pathType, tkEvent
-=======
-from dml_thread.mytypes import simpDict,  pathType, tkEvent
->>>>>>> d0972710d0b5140dd9c41fbd756ace6591dc3478
 
 from dml_thread import somecython, mung, plot
 from dmltk import panels
@@ -40,13 +31,8 @@ from multiprocessing import cpu_count
 
 
 def batch_num_files(data_dir: pathType) -> int:
-<<<<<<< HEAD
     num_files: int = len([fily for fily in os.listdir(data_dir)
                          if fily.endswith((".txt", ".csv", ".tsv"))])
-=======
-    num_files = len([fily for fily in os.listdir(data_dir)
-                     if fily.endswith((".txt", ".csv", ".tsv"))])
->>>>>>> d0972710d0b5140dd9c41fbd756ace6591dc3478
     return num_files
 
 
