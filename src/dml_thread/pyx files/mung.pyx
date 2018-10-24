@@ -1,5 +1,4 @@
-# cython: language_level=3
-# cython: profile=True
+#cython: language_level=3
 import numpy as np
 cimport numpy as cnp
 import csv
@@ -11,13 +10,13 @@ from dml_thread.my_types import pathType, simpDict, paramsTup
 from dml_thread import plot
 
 @cython.ccall      
-@cython.returns(cnp.ndarray)
+@cython.returns(cnp.ndarray[np.float64_t])
 def open_file_numpy(data_dir: str, filename: str):
     """ """
-    file: str = data_dir + "/" + filename
+    file = data_dir + "/" + filename
     if filename.endswith((".csv", )):   # ".txt")):
         with open(file, 'r') as source:
-            data_array: cnp.ndarray = np.loadtxt(source,
+            data_array: np.ndarray = np.loadtxt(source,
                                             delimiter=",",
                                             skiprows=20,
                                             dtype=float)
@@ -28,11 +27,11 @@ def open_file_numpy(data_dir: str, filename: str):
 
 @cython.ccall
 @cython.returns(tuple)
-def get_data_numpy(data_array: cnp.ndarray[cython.double]):
-    x_array: cnp.ndarray = None
-    y_array: cnp.ndarray = None
-    imped: cnp.ndarray
-    phase: cnp.ndarray
+def get_data_numpy(data_array: np.ndarray[np.float64_t]):
+    x_array: Opt[np.ndarray] = None
+    y_array: Opt[np.ndarray] = None
+    imped: Opt[np.ndarray]
+    phase: Opt[np.ndarray]
     if len(data_array[0]) == 4:
         x_array = data_array[:, [2]]  # pd
         y_array = data_array[:, [3]]  # current
@@ -54,7 +53,7 @@ def get_data_numpy(data_array: cnp.ndarray[cython.double]):
         x_array = None  # np.empty(0) and remove Opt ? and is not Nones below
         y_array = None
 
-    data: Tuple[np.ndarray, ...]
+    data: Opt[Tuple[np.ndarray, ...]]
     if x_array is not None and y_array is not None:  # both not falsey
         data = (x_array, y_array) # if x_array is not None else None
     elif imped is not None and phase is not None:
