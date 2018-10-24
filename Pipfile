@@ -5,10 +5,10 @@ name = "pypi"
 
 [packages]
 numpy = "*"
-matplotlib = "==2.2.3"
+matplotlib = "*"
 cython = "*"
 pillow = "*"
-pmw = "*"
+# pmw = "*"
 # pyside2 = "*"
 
 [dev-packages]
@@ -19,6 +19,8 @@ pyinstaller = "*"
 pytest = "*"
 coverage = "*"
 cython = "*"
+"autopep8" = "*"
+
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

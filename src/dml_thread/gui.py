@@ -12,14 +12,14 @@ import tkinter.ttk as ttk
 # import Pmw
 import matplotlib
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTk, NavigationToolbar2Tk
 
 # import pyside2
 
 from typing import Union, List, cast  # ,Union, override, get_type_hints
 from typing import Optional as Opt
 # , Num, simpTypes, simpList, compList, compDict,
-from dml_thread.types import simpDict,  pathType, tkEvent
+from dml_thread.my_types import simpDict,  pathType, tkEvent
 
 from dml_thread import somecython, mung, plot
 from dmltk import panels
@@ -32,7 +32,7 @@ from multiprocessing import cpu_count
 
 
 def batch_num_files(data_dir: pathType) -> int:
-    num_files = len([fily for fily in os.listdir(data_dir)
+    num_files: int = len([fily for fily in os.listdir(data_dir)
                          if fily.endswith((".txt", ".csv", ".tsv"))])
     return num_files
 
@@ -48,7 +48,7 @@ def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, setti
             output_dir = f"{data_dir}/output"
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-
+        """
         workers = num_files if (0 < num_files < cpu_count()) else (
             cpu_count() - 1)  # eg = 5 if 5 files, but 8 if 10 files
         with ProcessPoolExecutor(max_workers=workers) as executor:
@@ -57,6 +57,9 @@ def thread_open_mung_save(data_dir: pathType, output_dir: pathType = None, setti
                 filelist)), filelist, itertools.repeat(output_dir), itertools.repeat(settings))
             # for filename in os.listdir(data_dir):
             # future = executor.submit(open_mung_save, data_dir, filename, output_dir)
+        """
+        for filename in os.listdir(data_dir):
+            mung.open_mung_save(data_dir, filename, output_dir)
 
         finish_time = time.perf_counter() - mung_time
         print(

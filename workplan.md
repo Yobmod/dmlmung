@@ -71,7 +71,9 @@ Pyinstaller:
     - Add zip script with shututil
 
 Try Thread/Processpool
-
+Nb: single process/thread = 6.40/2
+    multiprocess = 4.80/2
+    cython single process no types: 6.35/2
 
 0.6-------------------------------------------
 

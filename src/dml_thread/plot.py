@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from typing import Tuple #, override, get_type_hints
 from typing import Optional as Opt
-from dml_thread.types import simpDict, pathType, paramsTup
+from dml_thread.my_types import simpDict, pathType, paramsTup
 
 
 data_dir: pathType = os.getcwd()  # cast(pathType, os.getcwd())

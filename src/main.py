@@ -6,12 +6,17 @@
 # from typing import List, Union, Dict, cast, NewType, Any  #, override, get_type_hints
 # from typing import Optional as Opt
 # from dmlechemmods.types import simpTypes, simpList, simpDict, compList, compDict, pathType # Num
-
+DEBUG = True
 
 
 if __name__ == "__main__":
     # import pyximport
     # pyximport.install(pyimport=True)
+    if DEBUG == True:
+        import cProfile
+        pr = cProfile.Profile() 
+        pr.enable()
+
     import time
     start_time = time.perf_counter()
     import multiprocessing
@@ -43,3 +48,15 @@ if __name__ == "__main__":
         raise
     finally:
         print('DMLmung app closed')
+        if DEBUG==True:
+            pr.disable()
+            import datetime
+            import pstats
+            now = datetime.datetime.now()
+            stats = pstats.Stats(pr)
+            stats.strip_dirs()
+            stats.sort_stats('cumulative')
+            stats.print_stats(15)
+            filename = f'./logs/profile_{now.day}-{now.month}-{now.year}.prof'
+            pr.dump_stats(filename)
+            # pr.print_stats(sort='cumtime')

@@ -1,19 +1,23 @@
+# cython: language_level=3
+# cython: profile=True
 import numpy as np
+cimport numpy as cnp
 import csv
-# cimport cython
+cimport cython
 from typing import Tuple, NamedTuple
 from typing import Optional as Opt
-from dml_thread.types import pathType, simpDict, paramsTup
+from dml_thread.my_types import pathType, simpDict, paramsTup
 
 from dml_thread import plot
 
-# @cython.ccall      
-def open_file_numpy(data_dir: pathType, filename: pathType) -> Opt[np.ndarray]:
+@cython.ccall      
+@cython.returns(cnp.ndarray)
+def open_file_numpy(data_dir: str, filename: str):
     """ """
-    file = data_dir + "/" + filename
+    file: str = data_dir + "/" + filename
     if filename.endswith((".csv", )):   # ".txt")):
         with open(file, 'r') as source:
-            data_array: np.ndarray = np.loadtxt(source,
+            data_array: cnp.ndarray = np.loadtxt(source,
                                             delimiter=",",
                                             skiprows=20,
                                             dtype=float)
@@ -22,12 +26,13 @@ def open_file_numpy(data_dir: pathType, filename: pathType) -> Opt[np.ndarray]:
         return None
 
 
-# @cython.ccall
-def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
-    x_array: Opt[np.ndarray] = None
-    y_array: Opt[np.ndarray] = None
-    imped: Opt[np.ndarray]
-    phase: Opt[np.ndarray]
+@cython.ccall
+@cython.returns(tuple)
+def get_data_numpy(data_array: cnp.ndarray[cython.double]):
+    x_array: cnp.ndarray = None
+    y_array: cnp.ndarray = None
+    imped: cnp.ndarray
+    phase: cnp.ndarray
     if len(data_array[0]) == 4:
         x_array = data_array[:, [2]]  # pd
         y_array = data_array[:, [3]]  # current
@@ -49,7 +54,7 @@ def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
         x_array = None  # np.empty(0) and remove Opt ? and is not Nones below
         y_array = None
 
-    data: Opt[Tuple[np.ndarray, ...]]
+    data: Tuple[np.ndarray, ...]
     if x_array is not None and y_array is not None:  # both not falsey
         data = (x_array, y_array) # if x_array is not None else None
     elif imped is not None and phase is not None:
@@ -58,8 +63,8 @@ def get_data_numpy(data_array: np.ndarray) -> Opt[Tuple[np.ndarray, ...]]:
         data = None
     return data
 
-
-def get_params(filename: pathType) -> paramsTup:  # Tuple[str, str, str, str, str]:
+@cython.cfunc
+def get_params(filename: str):  # Tuple[str, str, str, str, str]:
     """"""
     filename_strip = filename[:-4]
     if "agcl" in filename_strip:
@@ -90,12 +95,13 @@ def get_params(filename: pathType) -> paramsTup:  # Tuple[str, str, str, str, st
     else:
         solv = "H2O"
 
-    params = paramsTup(filename_strip, solv, elec, ref_elec, work_elec)
+    params: tuple = (filename_strip, solv, elec, ref_elec, work_elec)
     # reveal_type(params)
     return params
 
 
-def write_imp_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> None:
+@cython.ccall
+def write_imp_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> cython.void:
     """"""
     #(filename_strip, solv, elec, ref_elec, work_elec) = params
     filename_strip = params.filename_strip
@@ -112,7 +118,8 @@ def write_imp_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: 
             print(f"{filename_strip} impedance csv done")
 
 
-def write_zview_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> None:
+@cython.ccall
+def write_zview_data(data: Tuple[np.ndarray, ...], params: paramsTup, output_dir: pathType=None) -> cython.void:
     """""" 
     # (filename_strip, solv, elec, ref_elec, work_elec) = params
     filename_strip = params.filename_strip
@@ -150,11 +157,12 @@ fontlab_default: simpDict = dict(
     family='sans-serif', color='darkred', weight='normal', size=12)
 
 
+@cython.cfunc
 def open_mung_save(data_dir: pathType,
                    filename: pathType,
                    output_dir: Opt[pathType] = None,
                    settings: Opt[simpDict] = None
-                   ) -> None:
+                   ) -> cython.void:
     """"""
     cv_file = open_file_numpy(data_dir, filename)
     if cv_file is not None:
