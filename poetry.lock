@@ -1,5 +1,13 @@
 [[package]]
 category = "dev"
+description = "Python graph (network) package"
+name = "altgraph"
+optional = false
+python-versions = "*"
+version = "0.17"
+
+[[package]]
+category = "dev"
 description = "apipkg: namespace control and lazy-import mechanism"
 name = "apipkg"
 optional = false
@@ -213,6 +221,15 @@ version = "*"
 
 [[package]]
 category = "dev"
+description = "Clean single-source support for Python 3 and 2"
+marker = "sys_platform == \"win32\""
+name = "future"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+version = "0.18.2"
+
+[[package]]
+category = "dev"
 description = "Git Object Database"
 name = "gitdb"
 optional = false
@@ -264,6 +281,18 @@ name = "kiwisolver"
 optional = false
 python-versions = ">=3.6"
 version = "1.2.0"
+
+[[package]]
+category = "dev"
+description = "Mach-O header analysis and editing"
+marker = "sys_platform == \"darwin\""
+name = "macholib"
+optional = false
+python-versions = "*"
+version = "1.14"
+
+[package.dependencies]
+altgraph = ">=0.15"
 
 [[package]]
 category = "main"
@@ -404,6 +433,18 @@ funcsigs = ["funcsigs"]
 testing = ["funcsigs", "pytest"]
 
 [[package]]
+category = "dev"
+description = "Python PE parsing module"
+marker = "sys_platform == \"win32\""
+name = "pefile"
+optional = false
+python-versions = "*"
+version = "2019.4.18"
+
+[package.dependencies]
+future = "*"
+
+[[package]]
 category = "main"
 description = "Python Imaging Library (Fork)"
 name = "pillow"
@@ -494,6 +535,34 @@ name = "pygments"
 optional = false
 python-versions = ">=3.5"
 version = "2.7.0"
+
+[[package]]
+category = "dev"
+description = "PyInstaller bundles a Python application and all its dependencies into a single package."
+name = "pyinstaller"
+optional = false
+python-versions = "*"
+version = "4.0"
+
+[package.dependencies]
+altgraph = "*"
+macholib = ">=1.8"
+pefile = ">=2017.8.1"
+pyinstaller-hooks-contrib = ">=2020.6"
+pywin32-ctypes = ">=0.2.0"
+setuptools = "*"
+
+[package.extras]
+encryption = ["tinyaes (>=1.0.0)"]
+hook_testing = ["pytest (>=2.7.3)", "execnet (>=1.5.0)", "psutil"]
+
+[[package]]
+category = "dev"
+description = "Community maintained hooks for PyInstaller"
+name = "pyinstaller-hooks-contrib"
+optional = false
+python-versions = "*"
+version = "2020.8"
 
 [[package]]
 category = "dev"
@@ -669,6 +738,15 @@ python-versions = "*"
 version = "2020.1"
 
 [[package]]
+category = "dev"
+description = ""
+marker = "sys_platform == \"win32\""
+name = "pywin32-ctypes"
+optional = false
+python-versions = "*"
+version = "0.2.0"
+
+[[package]]
 category = "main"
 description = "SciPy: Scientific Library for Python"
 name = "scipy"
@@ -809,10 +887,14 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "57f639d7ec7e1e25b84cb57e4a3493ed60cce137c6d52160c46f188dffff524b"
+content-hash = "5b5e7f7ecbbb1b580f3940724a6b9b9ef5e4bfe925b9922a7b939a10b61b5b80"
 python-versions = "^3.7"
 
 [metadata.files]
+altgraph = [
+    {file = "altgraph-0.17-py2.py3-none-any.whl", hash = "sha256:c623e5f3408ca61d4016f23a681b9adb100802ca3e3da5e718915a9e4052cebe"},
+    {file = "altgraph-0.17.tar.gz", hash = "sha256:1f05a47122542f97028caf78775a095fbe6a2699b5089de8477eb583167d69aa"},
+]
 apipkg = [
     {file = "apipkg-1.5-py2.py3-none-any.whl", hash = "sha256:58587dd4dc3daefad0487f6d9ae32b4542b185e1c36db6993290e7c41ca2b47c"},
     {file = "apipkg-1.5.tar.gz", hash = "sha256:37228cda29411948b422fae072f57e31d3396d2ee1c9783775980ee9c9990af6"},
@@ -915,6 +997,9 @@ flake8-comprehensions = [
     {file = "flake8-comprehensions-3.2.3.tar.gz", hash = "sha256:d5751acc0f7364794c71d06f113f4686d6e2e26146a50fa93130b9f200fe160d"},
     {file = "flake8_comprehensions-3.2.3-py3-none-any.whl", hash = "sha256:44eaae9894aa15f86e0c86df1e218e7917494fab6f96d28f96a029c460f17d92"},
 ]
+future = [
+    {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
+]
 gitdb = [
     {file = "gitdb-4.0.5-py3-none-any.whl", hash = "sha256:91f36bfb1ab7949b3b40e23736db18231bf7593edada2ba5c3a174a7b23657ac"},
     {file = "gitdb-4.0.5.tar.gz", hash = "sha256:c9e1f2d0db7ddb9a704c2a0217be31214e91a4fe1dea1efad19ae42ba0c285c9"},
@@ -948,6 +1033,10 @@ kiwisolver = [
     {file = "kiwisolver-1.2.0-cp38-none-win32.whl", hash = "sha256:d069ef4b20b1e6b19f790d00097a5d5d2c50871b66d10075dab78938dc2ee2cf"},
     {file = "kiwisolver-1.2.0-cp38-none-win_amd64.whl", hash = "sha256:18d749f3e56c0480dccd1714230da0f328e6e4accf188dd4e6884bdd06bf02dd"},
     {file = "kiwisolver-1.2.0.tar.gz", hash = "sha256:247800260cd38160c362d211dcaf4ed0f7816afb5efe56544748b21d6ad6d17f"},
+]
+macholib = [
+    {file = "macholib-1.14-py2.py3-none-any.whl", hash = "sha256:c500f02867515e6c60a27875b408920d18332ddf96b4035ef03beddd782d4281"},
+    {file = "macholib-1.14.tar.gz", hash = "sha256:0c436bc847e7b1d9bda0560351bf76d7caf930fb585a828d13608839ef42c432"},
 ]
 makefun = [
     {file = "makefun-1.9.3-py2.py3-none-any.whl", hash = "sha256:ffe6a4ae006f4206c5bec77bcdc5bc00b356a5ac7359a8b2ddb1f7efa2dc5dec"},
@@ -1040,6 +1129,9 @@ pandas-alive = [
 pdbpp = [
     {file = "pdbpp-0.10.2.tar.gz", hash = "sha256:73ff220d5006e0ecdc3e2705d8328d8aa5ac27fef95cc06f6e42cd7d22d55eb8"},
 ]
+pefile = [
+    {file = "pefile-2019.4.18.tar.gz", hash = "sha256:a5d6e8305c6b210849b47a6174ddf9c452b2888340b8177874b862ba6c207645"},
+]
 pillow = [
     {file = "Pillow-7.2.0-cp35-cp35m-macosx_10_10_intel.whl", hash = "sha256:1ca594126d3c4def54babee699c055a913efb01e106c309fa6b04405d474d5ae"},
     {file = "Pillow-7.2.0-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:c92302a33138409e8f1ad16731568c55c9053eee71bb05b6b744067e1b62380f"},
@@ -1115,6 +1207,13 @@ pygments = [
     {file = "Pygments-2.7.0-py3-none-any.whl", hash = "sha256:2df50d16b45b977217e02cba6c8422aaddb859f3d0570a88e09b00eafae89c6e"},
     {file = "Pygments-2.7.0.tar.gz", hash = "sha256:2594e8fdb06fef91552f86f4fd3a244d148ab24b66042036e64f29a291515048"},
 ]
+pyinstaller = [
+    {file = "pyinstaller-4.0.tar.gz", hash = "sha256:970beb07115761d5e4ec317c1351b712fd90ae7f23994db914c633281f99bab0"},
+]
+pyinstaller-hooks-contrib = [
+    {file = "pyinstaller-hooks-contrib-2020.8.tar.gz", hash = "sha256:71982f32883309e89675bfd10093cdcaca4f894bce11a91a34559b8224cf5e63"},
+    {file = "pyinstaller_hooks_contrib-2020.8-py2.py3-none-any.whl", hash = "sha256:4935b2b48c2a38ab4f8f80d77147781642bff7d31748fca07d26dbdeeefb560d"},
+]
 pylama = [
     {file = "pylama-7.7.1-py2.py3-none-any.whl", hash = "sha256:fd61c11872d6256b019ef1235be37b77c922ef37ac9797df6bd489996dddeb15"},
     {file = "pylama-7.7.1.tar.gz", hash = "sha256:9bae53ef9c1a431371d6a8dca406816a60d547147b60a4934721898f553b7d8f"},
@@ -1165,6 +1264,10 @@ python-dotenv = [
 pytz = [
     {file = "pytz-2020.1-py2.py3-none-any.whl", hash = "sha256:a494d53b6d39c3c6e44c3bec237336e14305e4f29bbf800b599253057fbb79ed"},
     {file = "pytz-2020.1.tar.gz", hash = "sha256:c35965d010ce31b23eeb663ed3cc8c906275d6be1a34393a1d73a41febf4a048"},
+]
+pywin32-ctypes = [
+    {file = "pywin32-ctypes-0.2.0.tar.gz", hash = "sha256:24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942"},
+    {file = "pywin32_ctypes-0.2.0-py2.py3-none-any.whl", hash = "sha256:9dc2d991b3479cc2df15930958b674a48a227d5361d413827a4cfd0b5876fc98"},
 ]
 scipy = [
     {file = "scipy-1.5.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:cca9fce15109a36a0a9f9cfc64f870f1c140cb235ddf27fe0328e6afb44dfed0"},

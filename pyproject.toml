@@ -49,6 +49,7 @@ flake8-bugbear = "*"
 pdbpp = "*"
 gitpython = "*"
 flake8-annotations-complexity = "^0.0.5"
+pyinstaller = "^4.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
