@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "dmlmung"
+version = "0.1.0"
+description = ""
+authors = ["yobmod <yobmod@gmail.com>"]
+
+[tool.poetry.dependencies]
+# general
+python = "^3.7"
+typing-extensions = "*"
+python-dotenv = "*"
+toml = "*"
+
+# if data
+pandas = "*"
+numpy = {git = "https://github.com/numpy/numpy.git", branch="master"}
+matplotlib = "*"
+seaborn = "*"
+pandas-alive = "*"
+
+
+#if web
+# fastapi = {extras = ["all"], version = "^0.61.1"} # bring uvicorn, aiofiles, pydantic, startlette
+# jinja2 = "^2.11.2"
+#sqlalchemy = "^1.3.19"
+pydantic = "*"
+attrs = "*"
+pyfields = "*"
+typeguard = "^2.9.1"
+autoclass = "^2.2.0"
+cattrs = "^1.0.0"
+xarray = "^0.16.0"
+#alembic = "^1.4.2"
+#sqlalchemy-stubs = "^0.3"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+mypy = "*"
+pytest-cov = "*"
+pytest-mypy = "*"
+pytest-sugar = "*"
+pytest-xdist = "*"
+pylama = "*"
+autopep8 = "*"
+flake8 = "*"
+flake8-comprehensions = "*"
+flake8-bugbear = "*"
+pdbpp = "*"
+gitpython = "*"
+flake8-annotations-complexity = "^0.0.5"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
