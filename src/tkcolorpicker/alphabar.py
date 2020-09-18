@@ -89,10 +89,7 @@ class AlphaBar(tk.Canvas):
 
         x = alpha / 255. * width
         h, s, v = rgb_to_hsv(r, g, b)
-        if v < 50:
-            fill = "gray80"
-        else:
-            fill = 'black'
+        fill = "gray80" if v < 50 else 'black'
         self.create_line(x, 0, x, height, width=2, tags='cursor', fill=fill)
 
     def _on_click(self, event):
@@ -130,8 +127,5 @@ class AlphaBar(tk.Canvas):
 
     def set_color(self, color):
         """Set gradient color to color in RGB(A)."""
-        if len(color) == 3:
-            alpha = self.get()
-        else:
-            alpha = color[3]
+        alpha = self.get() if len(color) == 3 else color[3]
         self._draw_gradient(alpha, color[:3])

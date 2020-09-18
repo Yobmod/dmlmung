@@ -124,5 +124,4 @@ def overlay(image, color):
     """
     width, height = image.size
     im = Image.new("RGBA", (width, height), color)
-    preview = Image.alpha_composite(image, im)
-    return preview
+    return Image.alpha_composite(image, im)

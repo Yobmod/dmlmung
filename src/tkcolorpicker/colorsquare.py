@@ -46,7 +46,7 @@ class ColorSquare(tk.Canvas):
         self.bind('<ButtonPress-1>', self._on_click)
         self.bind('<B1-Motion>', self._on_move)
 
-    def _fill(self):
+    def _fill(self):  # sourcery skip: move-assign
         """Create the gradient."""
         r, g, b = hue2col(self._hue)
         width = self.winfo_width()
@@ -54,7 +54,8 @@ class ColorSquare(tk.Canvas):
         h = float(height - 1)
         w = float(width - 1)
         if height:
-            c = [(r + i / h * (255 - r), g + i / h * (255 - g), b + i / h * (255 - b)) for i in range(height)]
+            c = [(r + i / h * (255 - r), g + i / h * (255 - g),
+                  b + i / h * (255 - b)) for i in range(height)]
             data = []
             for i in range(height):
                 line = []

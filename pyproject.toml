@@ -14,7 +14,7 @@ toml = "*"
 # if data
 pandas = "*"
 numpy = {git = "https://github.com/numpy/numpy.git", branch="master"}
-matplotlib = "*"
+matplotlib = "*"  # bring numpy, pillow
 seaborn = "*"
 pandas-alive = "*"
 
