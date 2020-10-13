@@ -14,12 +14,25 @@
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "python.formatting.provider": "autopep8",
-  "python.formatting.autopep8Args": [],
+  "python.formatting.autopep8Args": [
+    "--max-line-length",
+    "120",
+    "--experimental"
+  ],
+  "python.formatting.blackArgs": ["--line-length", "120"],
   "editor.fontSize": 16,
   "window.zoomLevel": 1,
   "workbench.iconTheme": "material-icon-theme",
   "python.languageServer": "Pylance",
   "python.analysis.typeCheckingMode": "off",
   "vsintellicode.features.python.deepLearning": "enabled",
-  "python.analysis.completeFunctionParens": true
+  "python.analysis.completeFunctionParens": true,
+
+  "explorer.confirmDelete": false,
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "sourcery.token": "user_ubUeZlHC6PxolyCdAYoJ_3Lbis3LadO4jAP01U5SkLY7bwQA3ku3LLWe9pY"
 }

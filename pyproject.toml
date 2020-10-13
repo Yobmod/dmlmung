@@ -30,6 +30,8 @@ typeguard = "^2.9.1"
 autoclass = "^2.2.0"
 cattrs = "^1.0.0"
 xarray = "^0.16.0"
+numba = {extras = ["all"], version = "^0.51.2"}
+myfitnesspal = "^1.16.1"
 #alembic = "^1.4.2"
 #sqlalchemy-stubs = "^0.3"
 

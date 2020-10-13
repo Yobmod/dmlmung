@@ -8,10 +8,9 @@ Look into: cattrs, attrs-serde, attrs-stict, related
 
 import json
 from scipy.optimize import curve_fit
-from scipy import stats
 import numpy as np
-from numpy import ndarray
 from pathlib import Path
+from numba import jit
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
@@ -22,15 +21,24 @@ import attr
 # from numpy.typing import DtypeLike, ArrayLike, _ShapeLike, _SupportsArray, _Shape
 from typing import (Mapping, NamedTuple, Sequence,
                     cast, Tuple, Dict, Union, List, )
+
 from typing_extensions import TypedDict, Literal  # noqa: F401
+
+from numba.typed import List as NBList
 
 
 def water_added_to_pp(water_added: Sequence[float], vessel_volume: int = 1000
                       ) -> np.ndarray:
     """convert list of amounts of water in mg to array of partial pressures for a given volume"""
-    wadd_array = np.asarray(water_added, dtype=float)
-    pp = np.multiply(wadd_array / vessel_volume, 4)
-    assert isinstance(pp, ndarray)
+    water_list = NBList()
+    [water_list.append(x) for x in water_added]
+
+    @jit(nopython=True)
+    def for_numba(wl: NBList) -> np.ndarray:
+        wadd_array = np.asarray(wl)
+        return 4 * (wadd_array / vessel_volume)  # type: ignore
+
+    pp: np.ndarray = for_numba(water_list)
     return pp
 
 
@@ -42,33 +50,38 @@ def freq_change_to_WA(freq: Sequence[float], mass_mat: float, F0: int,
     Pgxugroot = 875500
     n2F0F0: int = 2 * (F0 ** 2)
     cf = n2F0F0 / Pgxugroot
+    freq_floats = NBList()
+    [freq_floats.append(float(x)) for x in freq]
 
-    freq_array = np.asarray(freq, dtype=float)
-    wabs_array = ((freq_array / cf) * elec_area)  # water abs per electrode
-    wabs_per_g = wabs_array / (mass_mat / 1_000_000)
-    assert isinstance(wabs_per_g, ndarray)
+    @ jit(nopython=True)
+    def for_numba(ff: NBList) -> np.ndarray:
+        freq_array = np.asarray(ff)
+        wabs_array = (freq_array / cf) * elec_area  # water abs per electrode
+        return wabs_array / (mass_mat / 1_000_000.0)  # type: ignore
+
+    wabs_per_g: np.ndarray = for_numba(freq_floats)
     return wabs_per_g
 
 
+@ jit(nopython=True)
 def predict_y(x: np.ndarray, m: float, k: float, n: float, j: float) -> np.ndarray:
     """Predict y values for a given x value dataset, using the parameters supplied
     Equation: y = mx / (k+x) + 1/[(n/jx) - 1/j]"""
     form_A = (x * m) / (k + x)
     # form_B_inv = (n / (j * x)) - (1 / j)  # = jn/jjx -jx/jjx = n - x / jx
     form_B = (j * x) / (n - x)  # 1 / form_B_inv
-    y_fit = form_A + form_B
-    assert isinstance(y_fit, ndarray)
+    y_fit: np.ndarray = form_A + form_B
     return y_fit
 
 
+@ jit(nopython=True)
 def predict_y_maxed_humidity(x: np.ndarray, m: float, k: float, j: float) -> np.ndarray:
     """Predict y values for a given x value dataset, using the parameters supplied
     Equation: y = mx / (k+x) + 1/[(n/jx) - 1/j] where n = 1"""
     form_A = (x * m) / (k + x)
     # form_B_inv = (1.0 / (j * x)) - (1 / j)  # 1.0 is n
     form_B = (j * x) / (1.0 - x)  # 1 / form_B_inv
-    y_fit = form_A + form_B
-    assert isinstance(y_fit, ndarray)
+    y_fit: np.ndarray = form_A + form_B
     return y_fit
 
 
@@ -186,26 +199,33 @@ def get_params(x_data: np.ndarray,
 
     assert len(x_data) == len(y_data)
 
-    popt: np.ndarray
-    pcov: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
-    pcov_diags: Tuple4float
+    @ jit(forceobj=True)  # probably useless
+    def for_numba(x_data: np.ndarray = x_data,
+                  y_data: np.ndarray = y_data,
+                  init_pt: ParamsNTup = init_pt,
+                  fix_n: bool = fix_n) -> WaterAbsFitParams:
+        popt: np.ndarray
+        pcov: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+        pcov_diags: Tuple4float
+        if fix_n:
+            popt, pcov = curve_fit(predict_y_maxed_humidity, x_data, y_data,
+                                   p0=(init_pt.m, init_pt.k, init_pt.j),
+                                   bounds=([0, 0, 0], [np.inf, 1, np.inf]),
+                                   )
+            popt = np.insert(popt, 2, values=1, axis=0)
+            pcov_diags = (pcov[0][0], pcov[1][1], 0, pcov[2][2])
+        else:
+            popt, pcov = curve_fit(predict_y, x_data, y_data,
+                                   p0=init_pt,
+                                   bounds=([0, 0, 0, 0], [np.inf, 1, np.inf, np.inf]),
+                                   )
+            pcov_diags = (pcov[0][0], pcov[1][1], pcov[2][2], pcov[3][3])
+        assert len(popt) == len(init_pt) == 4
+        std_errs = cast(ErrType, tuple([round(x ** 0.5, 3) for x in pcov_diags]))  # noqa, required for numba
+        return WaterAbsFitParams(popt, std_errs)
 
-    if fix_n:
-        popt, pcov = curve_fit(predict_y_maxed_humidity, x_data, y_data,
-                               p0=(init_pt.m, init_pt.k, init_pt.j),
-                               bounds=([0, 0, 0], [np.inf, 1, np.inf]),
-                               )
-        popt = np.insert(popt, 2, values=1, axis=0)
-        pcov_diags = (pcov[0][0], pcov[1][1], 0, pcov[2][2])
-    else:
-        popt, pcov = curve_fit(predict_y, x_data, y_data,
-                               p0=init_pt,
-                               bounds=([0, 0, 0, 0], [np.inf, 1, np.inf, np.inf]),
-                               )
-        pcov_diags = (pcov[0][0], pcov[1][1], pcov[2][2], pcov[3][3])
-    assert len(popt) == len(init_pt) == 4
-    std_errs = cast(ErrType, tuple(round(x ** 0.5, 3) for x in pcov_diags))
-    return WaterAbsFitParams(popt, std_errs)
+    fitted: WaterAbsFitParams = for_numba()
+    return fitted
 
 
 def wabs_plot(title: str = "") -> Tuple[Figure, Axes]:
@@ -343,103 +363,6 @@ def plot_multi(input: Union[PlotInput, PlotInputTDict],  # PlotInputMap],
     return fig, ax
 
 
-def trunc_data_for_bet(x_data: np.ndarray, y_data: np.ndarray, max_x: float = 0.4) -> Tuple[np.ndarray, np.ndarray]:
-    x_trunc: np.ndarray = np.asarray([x for x in x_data if x < max_x])
-    print(x_trunc)
-    y_trunc: np.ndarray = 1 / y_data[0:len(x_trunc)]
-    print(y_trunc)
-    return (x_trunc, y_trunc)
-
-
-def get_bet_params(x_data: np.ndarray, y_data: np.ndarray, max_x: float = 0.4) -> Tuple[float, float]:
-    x_trunc, y_trunc = trunc_data_for_bet(x_data, y_data, max_x=max_x)
-    slope, intercept, r, p, stderr = stats.linregress(x_trunc, y_trunc)
-    print(slope, intercept)
-    return (slope, intercept)
-
-
-def bet_plot(title: str = "") -> Tuple[Figure, Axes]:
-    fig = plt.figure()
-    ax: Axes = fig.subplots()  # type:ignore
-    plt.xlim(0, 1)
-    # plt.ylim(0, 0.1)
-    plt.ylabel(r"BET Water Absorbtion (units $\mathrm{MO_x}$")
-    plt.xlabel("H\u2082O P / P\u2080")
-    ax.set_title(title)
-    return (fig, ax)
-
-
-def plot_bet_line(x_data: np.ndarray, y_data: np.ndarray,
-                  fig: Figure, ax: Axes,
-                  legend: str = "",
-                  *,
-                  linecolor: str = "b",
-                  # fix_n: bool = True,
-                  ) -> Tuple[Figure, Axes]:
-    """b: blue
-    g: green
-    r: red
-    c: cyan
-    m: magenta
-    y: yellow
-    k: black
-    w: white
-    Tuple[float, float, float], Tuple4float
-    html names"""
-
-    assert len(x_data) == len(y_data)
-
-    # fit to straight line for < 0.3
-    slope, intercept = get_bet_params(x_data, y_data)
-    x_fit = np.linspace(0.001, 0.99, 1000)
-    y_fit = np.add(np.multiply(x_fit, slope), intercept)
-    # assert isinstance(y_fit, ndarray)
-    ax.plot(x_data[1:], 1 / y_data[1:], f"{linecolor}o", label=legend)
-    ax.plot(x_fit, y_fit, f"{linecolor}-")
-
-    plt.legend(loc="upper left")
-    return fig, ax
-
-
-def plot_bet_multi(input: Union[PlotInput, PlotInputTDict],  # PlotInputMap],
-                   fix_n: bool = True,
-                   show: bool = True,
-                   save: bool = True,
-                   save_path: Union[str, Path] = ".",
-                   file_name: str = "plot_bet_multi.png",
-                   ) -> Tuple[Figure, Axes]:
-    R"""plot multiple Water Abs datasets as BET on single axis
-    vmax_line: bool -> add a line for v_max for each  dataset
-    fix_n: bool = True -> Use constrained n(max partial pressure) of 1
-    show: bool = True -> show figure
-    save: bool = True -> save figure to provided path or in cwd
-    save_path: str | Path = R".\" -> path to save figure, if save=True"""
-    valid_input: PlotInput = (input
-                              if isinstance(input, PlotInput)
-                              else PlotInput(**input)
-                              )
-
-    fig, ax = bet_plot(title=valid_input.title)
-
-    for item in valid_input.data:
-        # assert isinstance(item, WA_dataset)
-        plot_bet_line(item.x_data, item.y_data,
-                      fig, ax,
-                      item.legend,
-                      linecolor=item.color,
-                      # fix_n=fix_n,
-                      )
-
-    if save:
-        sp = Path(save_path) / file_name
-        plt.savefig(f"{sp}")
-
-    if show:
-        plt.show()
-
-    return fig, ax
-
-
 if __name__ == "__main__":
 
     # ThO2
@@ -452,10 +375,8 @@ if __name__ == "__main__":
 
     x_tho2_ox = water_added_to_pp(
         [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
-    y_tho2_ox = freq_change_to_WA(
-        [180, 180, 211.5, 211, 275, 275, 305, 305, 311.5, 311, 333.5, 333, 431.5, 431, 529, 540],
-        mass_mat=70.5, F0=5794505
-    )
+    y_tho2_ox = freq_change_to_WA([180.0, 180, 211.5, 211.0, 275.0, 275.0, 305.0, 305.0,
+                                   311.5, 311.0, 333.5, 333.0, 431.5, 431.0, 529.0, 540.0], mass_mat=70.5, F0=5794505)
 
     oxal_data_500: PlotInputTDict = {
         "title": "Ceria vs Thoria (from oxalate)",
@@ -466,6 +387,5 @@ if __name__ == "__main__":
     }
 
     oxalate_plot_500 = plot_multi(input=oxal_data_500, file_name="plot_oxalate.png", fix_n=True, vmax_line=True)
-    oxalate_bet_500 = plot_bet_multi(input=oxal_data_500, file_name="bet_oxalate.png")
 
     # make plot_line colors literals and autocycle colors

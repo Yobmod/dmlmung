@@ -43,7 +43,7 @@ class ParamsTDict(TypedDict):
 CorrelationType = Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
 Tuple4float = Tuple[float, float, float, float]
 ErrType = Tuple4float
-ParamsType = Union[List[float], Tuple4float, ParamsNTup]
+ParamsType = Union[List[float], Tuple4float, ParamsNTup, np.ndarray]
 
 
 @dataclass(init=False, order=True, frozen=False)
@@ -55,8 +55,8 @@ class WaterAbsFitParams():
     def __init__(self,
                  params: ParamsType = (300.0, 20.0, 250.0, 40.0),
                  std_errs: ErrType = (0, 0, 0, 0)) -> None:
-        self.init_params = params
-        self.params = self.convert_params()
+        # self.init_params = params
+        self.params = self.convert_params(params)
         self.validate_params()
 
         self.m = self.params.m
@@ -64,10 +64,10 @@ class WaterAbsFitParams():
         self.n = self.params.n
         self.j = self.params.j
 
-    def convert_params(self) -> ParamsNTup:
+    def convert_params(self, v: ParamsType) -> ParamsNTup:
         """Converter function to coerce 4 float list, tuple, set, ndarray to ParamsNTup
         Also rounds floats to 1 d.p."""
-        v = self.init_params
+        # v = self.init_params
         try:
             rounded_v = tuple((round(x, 1) for x in v))
             w = ParamsNTup(*rounded_v)
@@ -76,6 +76,7 @@ class WaterAbsFitParams():
             raise
         except Exception:
             raise
+        # del self.init_params
         return w
 
     def validate_params(self) -> bool:
@@ -84,11 +85,11 @@ class WaterAbsFitParams():
             raise TypeError(
                 "Fit parameters should by a ParamsNTup (coerced from tuple, list, set, np.ndarray)")
 
-        if not len(v) == 4:
+        if len(v) != 4:
             raise ValueError(
                 "Fit parameters should be container of len == 4, eg. ParamsNTup")
 
-        if not all(p > 0 for p in v):
+        if any(p <= 0 for p in v):
             raise ValueError(
                 "All fit parameters should be positive floats | ints")
         return True
@@ -100,8 +101,7 @@ class WaterAbsFitParams():
     def as_tuple(self) -> Tuple[ParamsNTup, ErrType]:
         """return datclass as Tuple[float X 4]"""
         d = self.__dict__
-        t = cast(Tuple[ParamsNTup, ErrType], tuple(d.values()))
-        return t
+        return cast(Tuple[ParamsNTup, ErrType], tuple(d.values()))
 
     def as_dict(self) -> Dict[str, Union[ParamsNTup, ErrType]]:
         """return datclass as Dict[str, float]"""
@@ -110,8 +110,7 @@ class WaterAbsFitParams():
 
     def params_dict(self) -> ParamsTDict:
         d = self.params._asdict()
-        pd = ParamsTDict(m=d['m'], k=d['k'], n=d['n'], j=d['j'])
-        return pd
+        return ParamsTDict(m=d['m'], k=d['k'], n=d['n'], j=d['j'])
 
 
 def get_params(x: np.ndarray, y: np.ndarray,

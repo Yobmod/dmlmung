@@ -45,7 +45,7 @@ class ParamsTDict(TypedDict):
 CorrelationType = Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
 Tuple4float = Tuple[float, float, float, float]
 ErrType = Tuple4float
-ParamsType = Union[List[float], Tuple4float, ParamsNTup]
+ParamsType = Union[List[float], Tuple4float, ParamsNTup, np.ndarray]
 
 
 @dataclass(order=True, frozen=False)
@@ -64,6 +64,7 @@ class WaterAbsFitParams():
         self.k = self.params.k
         self.n = self.params.n
         self.j = self.params.j
+        del self.init_params
 
     def convert_params(self) -> ParamsNTup:
         """Converter function to coerce 4 float list, tuple, set, ndarray to ParamsNTup
@@ -85,11 +86,11 @@ class WaterAbsFitParams():
             raise TypeError(
                 "Fit parameters should by a ParamsNTup (coerced from tuple, list, set, np.ndarray)")
 
-        if not len(v) == 4:
+        if len(v) != 4:
             raise ValueError(
                 "Fit parameters should be container of len == 4, eg. ParamsNTup")
 
-        if not all(p > 0 for p in v):
+        if any(p <= 0 for p in v):
             raise ValueError(
                 "All fit parameters should be positive floats | ints")
         return True
@@ -100,8 +101,7 @@ class WaterAbsFitParams():
 
     def as_tuple(self) -> Tuple[ParamsNTup, ErrType]:
         """return datclass as Tuple[float X 4]"""
-        t = cast(Tuple[ParamsNTup, ErrType], astuple(self))
-        return t
+        return cast(Tuple[ParamsNTup, ErrType], astuple(self))
 
     def as_dict(self) -> Dict[str, Union[ParamsNTup, ErrType]]:
         """return datclass as Dict[str, float]"""
@@ -110,8 +110,7 @@ class WaterAbsFitParams():
 
     def params_dict(self) -> ParamsTDict:
         d = self.params._asdict()
-        pd = ParamsTDict(m=d['m'], k=d['k'], n=d['n'], j=d['j'])
-        return pd
+        return ParamsTDict(m=d['m'], k=d['k'], n=d['n'], j=d['j'])
 
 
 def get_params(x: np.ndarray, y: np.ndarray,

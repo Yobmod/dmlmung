@@ -61,7 +61,7 @@ class WaterAbsFitParams():
     std_errs: ErrType = (0, 0, 0, 0)
 
     @validator('init_params', pre=True)
-    def validate_params(cls, v: ParamsType) -> ParamsType:
+    def validate_params(self, v: ParamsType) -> ParamsType:
         if not isinstance(v, (ParamsNTup, tuple, np.ndarray, list)) or not isinstance(v[0], (int, float)):
             raise TypeError(
                 "Fit parameters should by a ParamsNTup (coerced from tuple, list, set, np.ndarray)")
@@ -73,12 +73,11 @@ class WaterAbsFitParams():
         if not all(p > 0 for p in v):
             raise ValueError(
                 "All fit parameters should be positive floats | ints")
-        return v
+        return self.convert_params(v)
 
-    def convert_params(self) -> ParamsNTup:
+    def convert_params(self, v: ParamsType) -> ParamsNTup:
         """Converter function to coerce 4 float list, tuple, set, ndarray to ParamsNTup
         Also rounds floats to 1 d.p. pydantic and coerces int to float"""
-        v = self.init_params
         try:
             rounded_v = tuple((round(x, 1) for x in v))
             w = ParamsNTup(*rounded_v)
@@ -90,7 +89,7 @@ class WaterAbsFitParams():
         return w
 
     def __post_init_post_parse__(self) -> None:
-        self.params = self.convert_params()
+        self.params = self.convert_params(self.init_params)
         self.m: float = self.params.m
         self.k: float = self.params.k
         self.n: float = self.params.m
