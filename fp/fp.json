@@ -1,0 +1,387 @@
+{
+        "2020-08-01": {
+                "calories": 0,
+                "protein": 0,
+                "weight": null
+        },
+        "2020-08-02": {
+                "calories": 0,
+                "protein": 0,
+                "weight": null
+        },
+        "2020-08-03": {
+                "calories": 0,
+                "protein": 0,
+                "weight": 82.0
+        },
+        "2020-08-04": {
+                "calories": 0,
+                "protein": 0,
+                "weight": null
+        },
+        "2020-08-05": {
+                "calories": 1523.0,
+                "protein": 43.0,
+                "weight": null
+        },
+        "2020-08-06": {
+                "calories": 966.0,
+                "protein": 62.0,
+                "weight": null
+        },
+        "2020-08-07": {
+                "calories": 1363.0,
+                "protein": 100.0,
+                "weight": 81.7
+        },
+        "2020-08-08": {
+                "calories": 1518.0,
+                "protein": 154.0,
+                "weight": 79.9
+        },
+        "2020-08-09": {
+                "calories": 1069.0,
+                "protein": 144.0,
+                "weight": 79.9
+        },
+        "2020-08-10": {
+                "calories": 1268.0,
+                "protein": 118.0,
+                "weight": 79.6
+        },
+        "2020-08-11": {
+                "calories": 500.0,
+                "protein": 83.0,
+                "weight": 79.3
+        },
+        "2020-08-12": {
+                "calories": 1249.0,
+                "protein": 97.0,
+                "weight": 78.5
+        },
+        "2020-08-13": {
+                "calories": 1200.0,
+                "protein": 27.0,
+                "weight": 78.2
+        },
+        "2020-08-14": {
+                "calories": 1605.0,
+                "protein": 166.0,
+                "weight": null
+        },
+        "2020-08-15": {
+                "calories": 748.0,
+                "protein": 26.0,
+                "weight": null
+        },
+        "2020-08-16": {
+                "calories": 502.0,
+                "protein": 66.0,
+                "weight": 78.2
+        },
+        "2020-08-17": {
+                "calories": 820.0,
+                "protein": 98.0,
+                "weight": 77.8
+        },
+        "2020-08-18": {
+                "calories": 1314.0,
+                "protein": 79.0,
+                "weight": 77.7
+        },
+        "2020-08-19": {
+                "calories": 1249.0,
+                "protein": 115.0,
+                "weight": null
+        },
+        "2020-08-20": {
+                "calories": 1557.0,
+                "protein": 66.0,
+                "weight": null
+        },
+        "2020-08-21": {
+                "calories": 1510.0,
+                "protein": 37.0,
+                "weight": 77.6
+        },
+        "2020-08-22": {
+                "calories": 1844.0,
+                "protein": 81.0,
+                "weight": 77.3
+        },
+        "2020-08-23": {
+                "calories": 1572.0,
+                "protein": 123.0,
+                "weight": null
+        },
+        "2020-08-24": {
+                "calories": 856.0,
+                "protein": 32.0,
+                "weight": null
+        },
+        "2020-08-25": {
+                "calories": 1433.0,
+                "protein": 68.0,
+                "weight": null
+        },
+        "2020-08-26": {
+                "calories": 1048.0,
+                "protein": 118.0,
+                "weight": null
+        },
+        "2020-08-27": {
+                "calories": 1100.0,
+                "protein": 183.0,
+                "weight": null
+        },
+        "2020-08-28": {
+                "calories": 1525.0,
+                "protein": 233.0,
+                "weight": 77.2
+        },
+        "2020-08-29": {
+                "calories": 1552.0,
+                "protein": 194.0,
+                "weight": 76.9
+        },
+        "2020-08-30": {
+                "calories": 2696.0,
+                "protein": 201.0,
+                "weight": 76.9
+        },
+        "2020-08-31": {
+                "calories": 1466.0,
+                "protein": 204.0,
+                "weight": null
+        },
+        "2020-09-01": {
+                "calories": 1465.0,
+                "protein": 200.0,
+                "weight": null
+        },
+        "2020-09-02": {
+                "calories": 1294.0,
+                "protein": 171.0,
+                "weight": null
+        },
+        "2020-09-03": {
+                "calories": 1105.0,
+                "protein": 108.0,
+                "weight": null
+        },
+        "2020-09-04": {
+                "calories": 1695.0,
+                "protein": 191.0,
+                "weight": null
+        },
+        "2020-09-05": {
+                "calories": 1538.0,
+                "protein": 139.0,
+                "weight": 76.6
+        },
+        "2020-09-06": {
+                "calories": 1122.0,
+                "protein": 123.0,
+                "weight": null
+        },
+        "2020-09-07": {
+                "calories": 1331.0,
+                "protein": 88.0,
+                "weight": null
+        },
+        "2020-09-08": {
+                "calories": 965.0,
+                "protein": 77.0,
+                "weight": null
+        },
+        "2020-09-09": {
+                "calories": 1956.0,
+                "protein": 133.0,
+                "weight": null
+        },
+        "2020-09-10": {
+                "calories": 575.0,
+                "protein": 13.0,
+                "weight": null
+        },
+        "2020-09-11": {
+                "calories": 1404.0,
+                "protein": 87.0,
+                "weight": 76.2
+        },
+        "2020-09-12": {
+                "calories": 748.0,
+                "protein": 83.0,
+                "weight": 76.2
+        },
+        "2020-09-13": {
+                "calories": 1768.0,
+                "protein": 61.0,
+                "weight": 75.7
+        },
+        "2020-09-14": {
+                "calories": 1551.0,
+                "protein": 51.0,
+                "weight": null
+        },
+        "2020-09-15": {
+                "calories": 1610.0,
+                "protein": 97.0,
+                "weight": null
+        },
+        "2020-09-16": {
+                "calories": 1691.0,
+                "protein": 127.0,
+                "weight": null
+        },
+        "2020-09-17": {
+                "calories": 513.0,
+                "protein": 24.0,
+                "weight": 76.0
+        },
+        "2020-09-18": {
+                "calories": 1598.0,
+                "protein": 105.0,
+                "weight": 75.6
+        },
+        "2020-09-19": {
+                "calories": 1897.0,
+                "protein": 162.0,
+                "weight": null
+        },
+        "2020-09-20": {
+                "calories": 1628.0,
+                "protein": 139.0,
+                "weight": 75.4
+        },
+        "2020-09-21": {
+                "calories": 1501.0,
+                "protein": 79.0,
+                "weight": null
+        },
+        "2020-09-22": {
+                "calories": 510.0,
+                "protein": 83.0,
+                "weight": null
+        },
+        "2020-09-23": {
+                "calories": 1036.0,
+                "protein": 78.0,
+                "weight": 74.9
+        },
+        "2020-09-24": {
+                "calories": 1176.0,
+                "protein": 122.0,
+                "weight": 74.6
+        },
+        "2020-09-25": {
+                "calories": 1881.0,
+                "protein": 169.0,
+                "weight": 74.8
+        },
+        "2020-09-26": {
+                "calories": 2127.0,
+                "protein": 172.0,
+                "weight": null
+        },
+        "2020-09-27": {
+                "calories": 1514.0,
+                "protein": 201.0,
+                "weight": 74.7
+        },
+        "2020-09-28": {
+                "calories": 861.0,
+                "protein": 101.0,
+                "weight": 74.6
+        },
+        "2020-09-29": {
+                "calories": 1665.0,
+                "protein": 118.0,
+                "weight": 74.1
+        },
+        "2020-09-30": {
+                "calories": 3152.0,
+                "protein": 175.0,
+                "weight": null
+        },
+        "2020-10-01": {
+                "calories": 1247.0,
+                "protein": 14.0,
+                "weight": null
+        },
+        "2020-10-02": {
+                "calories": 1848.0,
+                "protein": 141.0,
+                "weight": null
+        },
+        "2020-10-03": {
+                "calories": 1837.0,
+                "protein": 198.0,
+                "weight": 74.5
+        },
+        "2020-10-04": {
+                "calories": 1704.0,
+                "protein": 145.0,
+                "weight": null
+        },
+        "2020-10-05": {
+                "calories": 1563.0,
+                "protein": 193.0,
+                "weight": null
+        },
+        "2020-10-06": {
+                "calories": 1684.0,
+                "protein": 143.0,
+                "weight": null
+        },
+        "2020-10-07": {
+                "calories": 2618.0,
+                "protein": 116.0,
+                "weight": 74.4
+        },
+        "2020-10-08": {
+                "calories": 1091.0,
+                "protein": 134.0,
+                "weight": 74.1
+        },
+        "2020-10-09": {
+                "calories": 1334.0,
+                "protein": 48.0,
+                "weight": null
+        },
+        "2020-10-10": {
+                "calories": 2083.0,
+                "protein": 200.0,
+                "weight": null
+        },
+        "2020-10-11": {
+                "calories": 1476.0,
+                "protein": 188.0,
+                "weight": null
+        },
+        "2020-10-12": {
+                "calories": 1774.0,
+                "protein": 156.0,
+                "weight": null
+        },
+        "2020-10-13": {
+                "calories": 1933.0,
+                "protein": 146.0,
+                "weight": 74.5
+        },
+        "2020-10-14": {
+                "calories": 2386.0,
+                "protein": 125.0,
+                "weight": 74.0
+        },
+        "2020-10-15": {
+                "calories": 1923.0,
+                "protein": 151.0,
+                "weight": null
+        },
+        "2020-10-16": {
+                "calories": 1985.0,
+                "protein": 1.0,
+                "weight": null
+        }
+}

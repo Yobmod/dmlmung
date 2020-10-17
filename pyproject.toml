@@ -11,32 +11,40 @@ typing-extensions = "*"
 python-dotenv = "*"
 toml = "*"
 
+# general
+pydantic = "*"
+attrs = "*"
+pyfields = "*"
+typeguard = "*"
+autoclass = "*"
+cattrs = "*"
+# attrs-serde = "*"
+
 # if data
 pandas = "*"
 numpy = {git = "https://github.com/numpy/numpy.git", branch="master"}
 matplotlib = "*"  # bring numpy, pillow
 seaborn = "*"
 pandas-alive = "*"
+# xarray = "*"
+# numba = {extras = ["all"], version = "*"}
 
 
 #if web
 # fastapi = {extras = ["all"], version = "^0.61.1"} # bring uvicorn, aiofiles, pydantic, startlette
 # jinja2 = "^2.11.2"
 #sqlalchemy = "^1.3.19"
-pydantic = "*"
-attrs = "*"
-pyfields = "*"
-typeguard = "^2.9.1"
-autoclass = "^2.2.0"
-cattrs = "^1.0.0"
-xarray = "^0.16.0"
-numba = {extras = ["all"], version = "^0.51.2"}
-myfitnesspal = "^1.16.1"
+more-itertools = "^8.5.0"
+
+
+myfitnesspal = "*"
+
 #alembic = "^1.4.2"
 #sqlalchemy-stubs = "^0.3"
 
 
 [tool.poetry.dev-dependencies]
+# cython = "*"  # {git = "https://github.com/cython/cython.git", branch="master"}
 pytest = "*"
 mypy = "*"
 pytest-cov = "*"
@@ -50,9 +58,10 @@ flake8-comprehensions = "*"
 flake8-bugbear = "*"
 pdbpp = "*"
 gitpython = "*"
-flake8-annotations-complexity = "^0.0.5"
-pyinstaller = "^4.0"
+flake8-annotations-complexity = "*"
+pyinstaller = "*"
+GitPython = "*"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.1.0"]
 build-backend = "poetry.masonry.api"
