@@ -1,26 +1,51 @@
-from WA import water_added_to_pp, freq_change_to_WA, PlotInputTDict, WA_dataset, plot_multi
+from pathlib import Path
+from WA import plot_bet_multi, table_bet_multi, water_added_to_pp, freq_change_to_WA, PlotInputTDict, WA_dataset, plot_multi
 
-# CeO2 10
-x_ceo2_ox = water_added_to_pp(
+x_uo2_ox = water_added_to_pp(
     [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
-y_ceo2_ox = freq_change_to_WA(
-    [146, 91, 198, 170, 224, 205, 288, 269, 295, 286, 312, 295, 374, 403, 502, 548],
-    mass_mat=69, F0=5791070
+y_uo2_ox = freq_change_to_WA(
+    [8.1, 6.4, 
+    11.9, 12.3, 
+    16.6, 14.2, 
+    20.8, 17.9, 
+    28.1, 22.7, 
+    34.2, 37.5, 
+    45.4, 39.3, 
+    74.2, 111.5],
+    mass_mat=55, F0=5798366)
+
+
+x_uo2_n = water_added_to_pp(
+    [10, 20, 25, 25, 50, 50, 100, 150, 240])
+y_uo2_n = freq_change_to_WA(
+    [4.5,  
+    6.8, 
+    12.5, 10.1, 
+    16.3, 17.3, 
+    20.8,
+    25.1,
+    100, 
+    ],
+    mass_mat=65, F0=5763900
 )
 
-x_ceo2_n = water_added_to_pp(
-    [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
-y_ceo2_n = freq_change_to_WA(
-    [52, 39, 82, 111, 112, 129, 123, 140, 134, 161, 158, 160, 174, 227, 400, 312],
-    mass_mat=46, F0=5751200
-)
-
-ceria_data_500: PlotInputTDict = {
-    "title": "Ceria oxalate vs nitrate",
+urania_data_500: PlotInputTDict = {
+    "title": "Urania from oxalate vs nitrate @ 500°C",
     "data": [
-        WA_dataset(x_ceo2_ox, y_ceo2_ox, "CeO\u2082 (oxalate)", color="c"),
-        WA_dataset(x_ceo2_n, y_ceo2_n, "CeO\u2082 (nitrate)", color="b"),
+        WA_dataset(x_uo2_ox, y_uo2_ox, "UO\u2082 (oxalate)", color="r", mass=55, temp=75),
+        WA_dataset(x_uo2_n, y_uo2_n, "UO\u2082 (nitrate)", color="m", mass=65, temp=75),
     ],
 }
 
-ceria_plot_500 = plot_multi(input=ceria_data_500, file_name="plot_ceria.png", fix_n=True, vmax_line=True)
+sp = Path(R".\results")
+urania_plot_500 = plot_multi(input=urania_data_500,
+                                save_path=sp,
+                                file_name="plot_urania.png",
+                                fix_n=False, vmax_line=False, equation=False)
+urania_plot_500_fix = plot_multi(input=urania_data_500,
+                                save_path=sp,
+                                file_name="plot_urania_fix.png",
+                                fix_n=True, vmax_line=False, equation=False)
+urania_bet_500 = plot_bet_multi(input=urania_data_500, save_path=sp,
+                                file_name="bet_urania.png", y_max=1e13)
+table_bet_multi(urania_data_500, save_path=sp,file_name="bet_urania.tsv")

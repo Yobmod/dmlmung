@@ -6,6 +6,8 @@ Note: mypy undestands that input types are for converter, and output types are a
 Look into: cattrs, attrs-serde, attrs-stict, related
 """
 
+# TODO if save_path, call a function to check path exists or create
+
 import csv
 import json
 from scipy.optimize import curve_fit
@@ -51,7 +53,7 @@ def water_added_to_pp(water_added: Sequence[float],
 
 
 def freq_change_to_WA(freq: Sequence[float], mass_mat: float, F0: int,
-                      elec_area: float = 0.66,
+                      elec_area: float = 0.342,
                       ) -> np.ndarray:
     """convert list of frequence changes in Hz to array of
     water absorbed per mass of absorbant (ug / ug)"""
@@ -94,9 +96,9 @@ class ParamsNTup(NamedTuple):
 
     # used instead of dataclass as has .__iter__() and indexable
     m: float = 0.03
-    k: float = 0.5
+    k: float = 0.05
     n: float = 1
-    j: float = 3
+    j: float = 0.1
 
 
 class ParamsTDict(TypedDict):
@@ -123,7 +125,7 @@ def convert_params(v: ParamsType) -> ParamsNTup:
             "Fit parameters should be container of len == 4, eg. ParamsNTup"
         )
     try:
-        rounded_v = tuple((round(x, 3) for x in v))
+        rounded_v = tuple((round(x, 5) for x in v))
         w = ParamsNTup(*rounded_v)
     except TypeError as terr:
         terr.args += (
@@ -155,7 +157,7 @@ class WaterAbsFitParams:
 
         if any(p <= 0 for p in v):
             print(v)
-            raise ValueError("All fit parameters should be positive floats | ints")
+            # raise ValueError("All fit parameters should be positive floats | ints")
 
     def __attrs_post_init__(self) -> None:
         self.m: float = self.params.m
@@ -209,7 +211,7 @@ def get_params(x_data: np.ndarray,
     if fix_n:
         popt, pcov = curve_fit(predict_y_maxed_humidity, x_data, y_data,
                                p0=(init_pt.m, init_pt.k, init_pt.j),
-                               bounds=([0, 0, 0], [np.inf, 1, np.inf]),
+                               # bounds=([0, 0, 0], [np.inf, 1, np.inf]),
                                )
         popt = np.insert(popt, 2, values=1, axis=0)
         pcov_diags = (pcov[0][0], pcov[1][1], 0, pcov[2][2])
@@ -228,7 +230,7 @@ def wabs_plot(title: str = "") -> Tuple[Figure, Axes]:
     fig = plt.figure()
     ax: Axes = fig.subplots()  # type:ignore
     plt.xlim(0, 1)
-    plt.ylim(0, 0.1)
+    plt.ylim(0, 0.01)
     plt.ylabel(r"Mass Water Absorbed (g / g $\mathrm{MO_x}$)")
     plt.xlabel("H\u2082O P / P\u2080")
     ax.set_title(title)
@@ -460,7 +462,7 @@ def plot_bet_multi(input: Union[PlotInput, PlotInputTDict],  # PlotInputMap],
                    save: bool = True,
                    save_path: Union[str, Path] = ".",
                    file_name: str = "plot_bet_multi.png",
-                   y_max: float = 1e12,
+                   y_max: float = 5e13,
                    ) -> Tuple[Figure, Axes]:
     R"""plot multiple Water Abs datasets as BET on single axis
     vmax_line: bool -> add a line for v_max for each  dataset
@@ -556,14 +558,14 @@ if __name__ == "__main__":
     x_ceo2_ox = water_added_to_pp(
         [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
     y_ceo2_ox = freq_change_to_WA(
-        [146, 91, 198, 170, 224, 205, 288, 269, 295, 286, 312, 295, 374, 403, 502, 548],
+        [14.6, 9.1, 19.8, 17.0, 22.4, 20.5, 28.8, 26.9, 29.5, 28.6, 31.2, 39.5, 57.4, 40.3, 90.2, 154.8],
         mass_mat=69, F0=5791070
     )
 
     x_tho2_ox = water_added_to_pp(
         [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
     y_tho2_ox = freq_change_to_WA(
-        [180, 180, 211.5, 211, 275, 275, 305, 305, 311.5, 311, 333.5, 333, 431.5, 431, 529, 540],
+        [18.0, 13.2, 21.15, 24.1, 27.5, 37.5, 30.5, 31.2, 36.2, 33.4, 33.3, 41.1, 63.1, 48.5, 82.9, 156.0],
         mass_mat=70.5, F0=5794505
     )
 
@@ -577,8 +579,6 @@ if __name__ == "__main__":
 
     oxalate_plot_500 = plot_multi(input=oxal_data_500,
                                   file_name="plot_oxalate.png",
-                                  fix_n=True, vmax_line=True, equation=False)
-    oxalate_bet_500 = plot_bet_multi(input=oxal_data_500,
-                                     file_name="bet_oxalate.png")
-    table_bet_multi(oxal_data_500,
-                    file_name="bet_oxalate.tsv")
+                                  fix_n=False, vmax_line=True, equation=False)
+    oxalate_bet_500 = plot_bet_multi(input=oxal_data_500, file_name="bet_oxalate.png", y_max=2e13)
+    table_bet_multi(oxal_data_500, file_name="bet_oxalate.tsv")
