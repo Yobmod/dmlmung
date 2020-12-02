@@ -554,31 +554,100 @@ def table_bet_multi(input: Union[PlotInput, PlotInputTDict],
 
 if __name__ == "__main__":
 
-    # ThO2
-    x_ceo2_ox = water_added_to_pp(
-        [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
-    y_ceo2_ox = freq_change_to_WA(
-        [14.6, 9.1, 19.8, 17.0, 22.4, 20.5, 28.8, 26.9, 29.5, 28.6, 31.2, 39.5, 57.4, 40.3, 90.2, 154.8],
-        mass_mat=69, F0=5791070
+    x_ceo2_n = water_added_to_pp(
+        [10, 10, 10,
+         25, 25,
+         50, 50, 50,
+         75, 75,
+         100, 100, 100,
+         150, 150, 150,
+         200, 200, 200,
+         240, 240])
+    y_ceo2_n = freq_change_to_WA(
+        [1 * x for x in [
+            10.4, 7.8, 9.9,
+            19.0, 22.2,
+            23.5, 25.9, 22.4,
+            24.6, 28.0,
+            33.4, 36.1, 24.6,
+            35.8, 36.0, 25.6,
+            47.4, 55.7, 32.8,
+            80.0, 131.2]],
+        mass_mat=46, F0=5751200
     )
 
     x_tho2_ox = water_added_to_pp(
         [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
     y_tho2_ox = freq_change_to_WA(
-        [18.0, 13.2, 21.15, 24.1, 27.5, 37.5, 30.5, 31.2, 36.2, 33.4, 33.3, 41.1, 63.1, 48.5, 82.9, 156.0],
+        [2 * x for x in [17.0, 11.2,
+                         20.15, 23.1,
+                         26.5, 32.5,
+                         29.5, 30.2, 34.2, 33.4, 38.3, 41.1, 63.1, 52.5, 82.9, 156.0]],
         mass_mat=70.5, F0=5794505
     )
 
-    oxal_data_500: PlotInputTDict = {
-        "title": "Ceria vs Thoria (from oxalate)",
+    x_uo2_ox = water_added_to_pp(
+        [10, 10, 25, 25, 50, 50, 75, 75, 100, 100, 150, 150, 200, 200, 240, 240])
+    y_uo2_ox = freq_change_to_WA(
+        [2 * x for x in [8.1, 6.4,
+                         11.9, 12.3,
+                         16.6, 14.2,
+                         20.8, 17.9,
+                         28.1, 22.7,
+                         34.2, 37.5,
+                         45.4, 39.3,
+                         74.2, 111.5]],
+        mass_mat=55, F0=5798366)
+
+    x_uo2_n = water_added_to_pp(
+        [10, 20, 25, 25, 50, 50, 100, 150, 240])
+    y_uo2_n = freq_change_to_WA(
+        [2 * x for x in [4.5,
+                         6.8,
+                         12.5, 10.1,
+                         16.3, 17.3,
+                         20.8,
+                         25.1,
+                         100,
+                         ]],
+        mass_mat=65, F0=5763900
+    )
+
+    x_ceo2_ox = water_added_to_pp(
+        [10, 10, 10, 10,
+         25, 25, 25, 25,
+         50, 50, 50, 50,
+         75, 75, 75, 75,
+         100, 100, 100, 100,
+         150, 150, 150, 150,
+         200, 200, 200, 200,
+         240, 240, 240, 240
+         ])
+    y_ceo2_ox = freq_change_to_WA(
+        [2 * x for x in [14.6, 11.1,  16.6, 9.1,
+                         19.8, 16.3,  21.8, 19.0,
+                         23.4, 21.5, 24.4, 22.5,
+                         28.8, 27.9, 30.8, 28.9,
+                         29.5, 36.6, 31.5, 30.6,
+                         43.2, 39.5, 32.2, 30.5,
+                         57.4, 61.3, 41.4, 44.3,
+                         90.2, 154.8, 52.2, 56.8]],
+        mass_mat=69, F0=5791070
+    )
+
+    data_500: PlotInputTDict = {
+        "title": "Ceria vs Thoria vs Urania",
         "data": [
             WA_dataset(x_ceo2_ox, y_ceo2_ox, "CeO\u2082 (oxalate)", mass=69.0, temp=75, color="c"),
+            WA_dataset(x_ceo2_n, y_ceo2_n, "CeO\u2082 (nitrate)", mass=69.0, temp=75, color="b"),
+            WA_dataset(x_uo2_ox, y_uo2_ox, "UO\u2082 (oxalate)", mass=69.0, temp=75, color="m"),
+            WA_dataset(x_uo2_n, y_uo2_n, "UO\u2082 (nitrate)", mass=69.0, temp=75, color="r"),
             WA_dataset(x_tho2_ox, y_tho2_ox, "ThO\u2082 (oxalate)", mass=70.5, temp=75, color="g"),
         ],
     }
 
-    oxalate_plot_500 = plot_multi(input=oxal_data_500,
-                                  file_name="plot_oxalate.png",
-                                  fix_n=False, vmax_line=True, equation=False)
-    oxalate_bet_500 = plot_bet_multi(input=oxal_data_500, file_name="bet_oxalate.png", y_max=2e13)
-    table_bet_multi(oxal_data_500, file_name="bet_oxalate.tsv")
+    plot_500 = plot_multi(input=data_500,
+                          file_name="plot_fixed_p.png",
+                          fix_n=True, vmax_line=False, equation=True)
+    bet_500 = plot_bet_multi(input=data_500, file_name="bet_oxalate.png", y_max=2e13)
+    table_bet_multi(data_500, file_name="bet_oxalate.tsv")
