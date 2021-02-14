@@ -7,7 +7,7 @@ from Cython.Build import cythonize
 
 setup(
     name='Hello world app',
-    ext_modules=cythonize("fp.pyx",
+    ext_modules=cythonize("fit_pal.pyx",
                           language_level="3",
                           annotate=True),
     # zip_safe=False,

@@ -5,16 +5,13 @@ from pathlib import Path
 import dotenv
 import os
 from datetime import datetime
-# import safety
+
 
 """
 poetry config virtualenvs.in-project true
 """
-
-# TODO: get username and pw using dotenv
 # use typer or argparse to get commit msg. if blank, use date + id?
-# Do a check with "safety" lib. use subprocess?
-# add progressbar from git lib?
+
 
 cwd = Path.cwd().resolve()
 try:
@@ -30,7 +27,14 @@ dotenv.load_dotenv(cwd / ".env")
 username = os.getenv("GIT_USERNAME") or "DML"
 password = os.getenv("GIT_PASSWORD")  # or None
 
-repo.remotes.origin.pull()
+try:
+    repo.remotes.origin.pull()
+    print("Pulling from github....")
+except Exception as e:
+    print("Could not pull from github!")
+    raise e
+else:
+    print("                  .... done")
 
 if repo.is_dirty():
     changedFiles = [item.a_path for item in repo.index.diff(None)]
@@ -60,8 +64,8 @@ if update_pending:
         raise
 
 
-venv_path = subprocess.check_output("poetry env info --path".split(), shell=True)
-venv_path = venv_path.decode("UTF-8")
+venv_bytepath = subprocess.check_output("poetry env info --path".split(), shell=True)
+venv_path = venv_bytepath.decode("UTF-8")
 
 Path(".vscode").mkdir(parents=True, exist_ok=True)
 Path(".vscode/settings.json").touch()

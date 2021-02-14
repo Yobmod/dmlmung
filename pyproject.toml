@@ -5,42 +5,51 @@ description = ""
 authors = ["yobmod <yobmod@gmail.com>"]
 
 [tool.poetry.dependencies]
-# general
+# basics
 python = "^3.7"
 typing-extensions = "*"
 python-dotenv = "*"
-toml = "*"
+
 
 # general
-pydantic = "*"
+more-itertools = "*"
+# toolz = "*"  # cytoolz
+# pydantic = "*"
 attrs = "*"
-pyfields = "*"
-typeguard = "*"
-autoclass = "*"
-cattrs = "*"
+# toml = "*"
+# ordered-set = "*"
+# bidict = "*"
+# pyfields = "*"
+# typeguard = "*"
+# autoclass = "*"
+# cattrs = "*"
 # attrs-serde = "*"
 
 # if data
-pandas = "*"
-numpy = {git = "https://github.com/numpy/numpy.git", branch="master"}
+# pandas = "*"
+numpy = "1.19.3" # {git = "https://github.com/numpy/numpy.git", branch="master"}
 matplotlib = "*"  # bring numpy, pillow
-seaborn = "*"
-pandas-alive = "*"
+# seaborn = "*"
+# pandas-alive = "*"
 # xarray = "*"
 # numba = {extras = ["all"], version = "*"}
 
+# if images
+# pillow ="*"
+# python-opencv = "*"
+# imutils = "*"
 
 #if web
 # fastapi = {extras = ["all"], version = "^0.61.1"} # bring uvicorn, aiofiles, pydantic, startlette
 # jinja2 = "^2.11.2"
-#sqlalchemy = "^1.3.19"
-more-itertools = "^8.5.0"
+# sqlalchemy = "^1.3.19"
+# alembic = "^1.4.2"
+# sqlalchemy-stubs = "^0.3"
 
 
 myfitnesspal = "*"
 
-#alembic = "^1.4.2"
-#sqlalchemy-stubs = "^0.3"
+
 
 
 [tool.poetry.dev-dependencies]
