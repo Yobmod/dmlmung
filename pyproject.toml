@@ -61,6 +61,9 @@ gitpython = "*"
 flake8-annotations-complexity = "*"
 pyinstaller = "*"
 GitPython = "*"
+rich = "*"
+pretty-errors = "*"
+pytest-pythonpath = "*"
 
 [build-system]
 requires = ["poetry>=1.1.0"]

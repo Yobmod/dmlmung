@@ -19,14 +19,14 @@ import attr
 # import cattr
 # from xarray import DataArray
 # import pandas as pd
-# from numpy.typing import DtypeLike, ArrayLike, _ShapeLike, _SupportsArray, _Shape
+# from numpy import typing as npt
 from typing import (Mapping, NamedTuple, Sequence,
-                    cast, Tuple, Dict, Union, List, )
+                    Any, cast, Tuple, Dict, Union, List, )
 from typing_extensions import TypedDict, Literal  # noqa: F401
 
 
 def water_added_to_pp(water_added: Sequence[float], vessel_volume: int = 1000
-                      ) -> np.ndarray:
+                      ) -> 'np.ndarray[Any, float]':
     """convert list of amounts of water in mg to array of partial pressures for a given volume"""
     wadd_array = np.asarray(water_added, dtype=float)
     pp = np.multiply(wadd_array / vessel_volume, 4)
@@ -36,7 +36,7 @@ def water_added_to_pp(water_added: Sequence[float], vessel_volume: int = 1000
 
 def freq_change_to_WA(freq: Sequence[float], mass_mat: float, F0: int,
                       elec_area: float = 0.66,
-                      ) -> np.ndarray:
+                      ) -> 'np.ndarray[Any, float]':
     """convert list of frequence changes in Hz to array of
     water absorbed per mass of absorbant (ug / ug)"""
     Pgxugroot = 875500
@@ -219,7 +219,7 @@ def wabs_plot(title: str = "") -> Tuple[Figure, Axes]:
     return (fig, ax)
 
 
-def plot_line(x_data: np.ndarray, y_data: np.ndarray,
+def plot_line(x_data: 'np.ndarray[Any, float]', y_data: np.ndarray,
               fig: Figure, ax: Axes,
               legend: str = "",
               *,
