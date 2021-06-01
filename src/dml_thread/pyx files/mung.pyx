@@ -72,9 +72,9 @@ def get_params(filename: str):  # Tuple[str, str, str, str, str]:
         ref_elec = "Pt pseudo"
 
     if "50eu" in filename_strip:
-        work_elec = "PuO2 + 50% Eu"
-    elif "10eu" in filename_strip:
         work_elec = "PuO2 + 10% Eu"
+    elif "10eu" in filename_strip:
+        work_elec = "PuO2 + 5% Eu"
     elif "puo2" in filename_strip:
         work_elec = "PuO2"
     else:

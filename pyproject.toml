@@ -48,6 +48,8 @@ matplotlib = "*"  # bring numpy, pillow
 
 
 myfitnesspal = "*"
+loguru = "^0.5.3"
+snoop = "^0.3.0"
 
 
 
@@ -73,6 +75,7 @@ GitPython = "*"
 rich = "*"
 pretty-errors = "*"
 pytest-pythonpath = "*"
+Cython = "^0.29.23"
 
 [build-system]
 requires = ["poetry>=1.1.0"]
