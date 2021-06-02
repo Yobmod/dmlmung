@@ -1,8 +1,9 @@
 from pathlib import Path
 from matplotlib import pyplot as plt
-from plot import (multi_bode_title, multi_bode_axes, multi_bode_add_data, multi_bode_plot_save,
+from plot import (multi_bode_axes, multi_bode_add_data, multi_bode_plot_save,
                   get_json_settings,
                   multi_nyquist_add_data, multi_nyquist_axes, multi_nyquist_plot_save)
+
 from mung import open_file_numpy, get_params, get_data_numpy, write_imp_data, write_zview_data
 import snoop
 

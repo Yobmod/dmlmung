@@ -4,7 +4,7 @@ from pathlib import Path
 # cimport numpy as cnp
 import csv
 # import cython
-from typing import Tuple, Union
+from typing import Tuple
 from typing import Optional as Opt
 from my_types import pathType, simpDict, paramsTup
 
@@ -231,14 +231,14 @@ def open_mung_save(data_dir: pathType,
 def fit_nyquist(
         frequencies: Sequence[float],
         number: int = 1, C_limit: Union[int, tuple[int, int]] = 0, R_limit=0, Rs_limit=0):
-    """
+    '''
 Treal = R / [1 + (f x R x C)2]
 Timag = (f x R2 x C) / [1 + (f x R x C)2]
 Trealtot = Rsolv + Treal1 + Treal2
 Timagtot = |(Timag1 + Timag2)|
 Tr + Rs = -0.0556Ti2 + 3.9333Ti - 56.051
 (R / [1 + (f x R x C)2]) + Rs = 0.0556 x((f x R2 x C) / [1 + (f x R x C)2])2 + 3.9333 x(f x R2 x C) / [1 + (f x R x C)2] - 56.05
-"""
+'''
     rs_range = range(Rs_limit) if Rs_limit else range(10_000)
     c_range = range(C_limit) if C_limit else range(1_000_000)
     r_range = range(R_limit) if R_limit else range(1_000_000)
@@ -247,7 +247,8 @@ Tr + Rs = -0.0556Ti2 + 3.9333Ti - 56.051
         for f in frequencies:
             for c in c_range:
                 for r in r_range:
-                    if r / [1 + (f x R x C)2]) + Rs = 0.0556 x((f x R2 x C) / [1 + (f x R x C)2])2 + 3.9333 x(f x R2 x C) / [1 + (f x R x C)2] - 56.05:
+                    if r / [1 + (f x R x C)2]) + Rs = 
+                    0.0556 x((f x R2 x C) / [1 + (f x R x C)2])2 + 3.9333 x(f x R2 x C) / [1 + (f x R x C)2] - 56.05:
                         break
     """
 

@@ -6,7 +6,7 @@ authors = ["yobmod <yobmod@gmail.com>"]
 
 [tool.poetry.dependencies]
 # basics
-python = "^3.7"
+python =  ">=3.7,<3.10"
 typing-extensions = "*"
 python-dotenv = "*"
 
@@ -50,6 +50,7 @@ matplotlib = "*"  # bring numpy, pillow
 myfitnesspal = "*"
 loguru = "^0.5.3"
 snoop = "^0.3.0"
+scipy = "^1.6.3"
 
 
 

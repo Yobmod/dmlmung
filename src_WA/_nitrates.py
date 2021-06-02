@@ -70,5 +70,6 @@ sp = Path(R".\results")
 nitrate_plot_500 = plot_multi(input=nitrate_data_500, save_path=sp,
                               file_name="plot_nitr.png", fix_n=False, vmax_line=False, equation=True)
 oxalate_bet_500 = plot_bet_multi(input=nitrate_data_500, save_path=sp, file_name="bet_nitr.png", y_max=1e13)
-oxalate_plot_500 = plot_multi(input=nitrate_data_500, save_path=sp, file_name="plot_nitr_fix.png", fix_n=True, vmax_line=False, , equation=False)
+oxalate_plot_500 = plot_multi(input=nitrate_data_500, save_path=sp,
+                              file_name="plot_nitr_fix.png", fix_n=True, vmax_line=False, equation=False)
 table_bet_multi(nitrate_data_500, save_path=sp, file_name="bet_nitr.tsv")

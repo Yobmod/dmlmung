@@ -1,5 +1,5 @@
 from my_types import pathType, paramsTup
-from typing import Dict, Mapping, Optional
+from typing import Dict, Mapping, Optional, Union
 from pathlib import Path
 import matplotlib.pyplot as plt
 import os
@@ -14,7 +14,7 @@ matplotlib.use('TkAgg')
 data_dir: pathType = os.getcwd()  # cast(pathType, os.getcwd())
 
 
-def get_json_settings(json_file: pathType) -> Mapping:
+def get_json_settings(json_file: pathType) -> Dict[str, Union[str, int]]:
     """"""
     try:
         with open('./' + json_file, 'r') as jf:
@@ -132,7 +132,7 @@ def make_bode_plot(freq_log: np.ndarray, imped_log: np.ndarray, phase: np.ndarra
     # plt.show()
 
 
-def multi_bode_axes(settings, y_axes="both") -> matplotlib.axes.Axes:
+def multi_bode_axes(settings: Mapping[str, Union[str, int]], y_axes: str = "both") -> matplotlib.figure.Figure:
     """"""
 
     fig = plt.figure()
@@ -198,7 +198,9 @@ def multi_bode_add_data(fig, freq_log: np.ndarray, imped_log: np.ndarray, phase:
 def multi_bode_plot_save(fig,
                          params: paramsTup,
                          output_dir: pathType = R".\output",
-                         settings: Optional[Mapping] = None) -> None:
+                         color_map="",
+                         settings: Optional[Mapping] = None,
+                         ) -> None:
 
     output_path = Path.cwd() / output_dir
     plt.figure(fig)  # make sure fig is focus
@@ -206,23 +208,26 @@ def multi_bode_plot_save(fig,
 
     handles, labels = axs[0].get_legend_handles_labels()
     combined = sorted(zip(fig.voltages, labels, handles))
-    color_map = plt.cm.get_cmap('twilight', len(fig.voltages))  # coolwarm twightlight
-    colors = [color_map(i) for i in range(len(fig.voltages))]
 
-    lines = axs[0].lines
-    sorted_lines = sorted(zip(fig.voltages, lines, colors))
+    if color_map:
+        color_map = plt.cm.get_cmap(color_map, len(fig.voltages))  # coolwarm twightlight
+        colors = [color_map(i) for i in range(len(fig.voltages))]
 
-    for _volts, line, col in sorted_lines:
-        line.set_color(col)
+        lines = axs[0].lines
+        sorted_lines = sorted(zip(fig.voltages, lines, colors))
+
+        for _volts, line, col in sorted_lines:
+            line.set_color(col)
     legend_anchor = (1.05, 1)
 
     if len(axs) > 1:
         handles2, labels2 = axs[1].get_legend_handles_labels()
         combined2 = sorted(zip(fig.voltages, labels2, handles2))
         lines2 = axs[1].lines
-        sorted_lines2 = sorted(zip(fig.voltages, lines2, colors))
-        for _volts, line, col in sorted_lines2:
-            line.set_color(col)
+        if color_map:
+            sorted_lines2 = sorted(zip(fig.voltages, lines2, colors))
+            for _volts, line, col in sorted_lines2:
+                line.set_color(col)
         legend_anchor = (1.15, 1)
 
     axs[0].legend([handle for _, _, handle in combined],
@@ -248,7 +253,7 @@ def multi_bode_plot(
     pass
 
 
-def multi_nyquist_axes(settings) -> matplotlib.axes.Axes:
+def multi_nyquist_axes(settings) -> matplotlib.figure.Figure:
     """"""
     fig = plt.figure()
     _ = fig.add_subplot(111)
@@ -260,7 +265,7 @@ def multi_nyquist_axes(settings) -> matplotlib.axes.Axes:
     return fig
 
 
-def multi_nyquist_title(fig, params, settings):
+def multi_nyquist_title(fig: matplotlib.figure.Figure, params: paramsTup, settings) -> matplotlib.figure.Figure:
 
     # plt.figure(fig)  # make sure fig is focus
     (filename_strip, solv, elec, ref_elec, work_elec, voltage) = params
@@ -272,7 +277,8 @@ def multi_nyquist_title(fig, params, settings):
     return fig
 
 
-def multi_nyquist_add_data(fig, imped_imag: np.ndarray, imped_real: np.ndarray, params: paramsTup):
+def multi_nyquist_add_data(
+        fig, imped_imag: np.ndarray, imped_real: np.ndarray, params: paramsTup) -> matplotlib.figure.Figure:
     ax1 = fig.axes[0]
     voltage_label = f"{params.voltage: .2f} V" if params.voltage is not None else None
     ax1.plot(imped_real, imped_imag, label=voltage_label)
@@ -281,7 +287,7 @@ def multi_nyquist_add_data(fig, imped_imag: np.ndarray, imped_real: np.ndarray, 
     return fig
 
 
-def multi_nyquist_plot_save(fig,
+def multi_nyquist_plot_save(fig: matplotlib.figure.Figure,
                             params: paramsTup,
                             output_dir: pathType = R".\output",
                             set_colors="",
@@ -295,7 +301,7 @@ def multi_nyquist_plot_save(fig,
     combined = sorted(zip(fig.voltages, labels, handles))
     if set_colors:
         color_map = plt.cm.get_cmap(set_colors, len(fig.voltages)+2)  # coolwarm twilight
-        colors = [color_map(i) for i in range(len(fig.voltages)+2)][1:-1]
+        colors = [color_map(i) for i in range(len(fig.voltages)+2)][1::]
 
         lines = axs[0].lines
         sorted_lines = sorted(zip(fig.voltages, lines, colors))
