@@ -51,6 +51,7 @@ myfitnesspal = "*"
 loguru = "^0.5.3"
 snoop = "^0.3.0"
 scipy = "^1.6.3"
+PyEIS = "^1.0.10"
 
 
 

@@ -649,6 +649,14 @@ snowballstemmer = "*"
 toml = ["toml"]
 
 [[package]]
+name = "pyeis"
+version = "1.0.10"
+description = "A Python-based Electrochemical Impedance Spectroscopy simulator and analyzer"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "pyflakes"
 version = "2.3.1"
 description = "passive checker of Python programs"
@@ -1066,7 +1074,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.10"
-content-hash = "db9c2f4f5639d84a508256a220b5f1d9f4af02cf8f4229439b2b6431d18b62dc"
+content-hash = "7ee0249593f7b55d991f9bb3db6b00040a355af26661b1fcd6f252f3c9dba4ee"
 
 [metadata.files]
 altgraph = [
@@ -1610,6 +1618,10 @@ pycparser = [
 pydocstyle = [
     {file = "pydocstyle-6.1.1-py3-none-any.whl", hash = "sha256:6987826d6775056839940041beef5c08cc7e3d71d63149b48e36727f70144dc4"},
     {file = "pydocstyle-6.1.1.tar.gz", hash = "sha256:1d41b7c459ba0ee6c345f2eb9ae827cab14a7533a88c5c6f7e94923f72df92dc"},
+]
+pyeis = [
+    {file = "PyEIS-1.0.10-py3-none-any.whl", hash = "sha256:ff73adabcce8f7105fdf52c945ad85a32bf08176c36fe008c6c925a89cf75906"},
+    {file = "PyEIS-1.0.10.tar.gz", hash = "sha256:2038787a102d1fef2644d6d2c9772359b85e39bcfc1fdcd236fe9553f513ec29"},
 ]
 pyflakes = [
     {file = "pyflakes-2.3.1-py2.py3-none-any.whl", hash = "sha256:7893783d01b8a89811dd72d7dfd4d84ff098e5eed95cfa8905b22bbffe52efc3"},
