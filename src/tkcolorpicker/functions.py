@@ -20,12 +20,12 @@ Functions and constants
 """
 
 
-try:
-    import tkinter as tk
-    from tkinter import ttk
-except ImportError:
-    import Tkinter as tk
-    import ttk
+# try:
+#import tkinter as tk
+#from tkinter import ttk
+# except ImportError:
+# import Tkinter as tk
+# import ttk
 from PIL import Image, ImageDraw, ImageTk
 from math import atan2, sqrt, pi
 import colorsys

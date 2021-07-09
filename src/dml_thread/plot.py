@@ -19,7 +19,7 @@ def get_json_settings(json_file: pathType) -> simpDict:
         with open('./' + json_file, 'r') as jf:
             settings: simpDict = json.load(jf)
     except Exception as e:
-        settings = dict(family='sans-serif', color='darkred', weight='normal', size=12)
+        settings = dict(family='sans-serif', color='darkred', weight='normal', size=12)  # noqa: C408
         print(e)
     return settings
 
@@ -35,16 +35,6 @@ def save_json_settings(json_file: pathType, setting_dict: simpDict) -> None:
     else:
         with open(json_file, 'w') as jf:
             jf.write(setting_json)
-
-
-"""
-fontlab_default: simpDict = dict(family='sans-serif', color='darkred', weight='normal', size=12)
-
-fontlab: Opt[simpDict] = get_json_settings(R'settings\settings.json')
-if fontlab is None:
-    fontlab = fontlab_default
-# print(fontlab)
-"""
 
 
 def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output_dir: str = None,
@@ -151,7 +141,7 @@ def multi_bode_axes(settings) -> matplotlib.axes.Axes:
     plt.xlabel('Log Frequency (Hz)', fontdict=settings)
     plt.ylabel('Phase (Theta)', fontdict=settings)
 
-    ax2 = ax1.twinx()
+    ax2 = ax1.twinx()       # noqa: F841
     plt.ylim(-90, 0)
 
     plt.ylabel('Log Impedance (Ohms)', fontdict=settings)

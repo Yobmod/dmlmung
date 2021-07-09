@@ -200,7 +200,7 @@ def fourier_smooth(x_var: np.ndarray, y_var: np.ndarray) -> Tuple[np.ndarray, np
     return (x_var, y_smooth)
 
 
-fontlab_default = dict(family='sans-serif', color='darkred', weight='normal', size=12)
+fontlab_default = dict(family='sans-serif', color='darkred', weight='normal', size=12)  # noqa: C408
 
 
 # @cython.cfunc

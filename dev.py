@@ -1,6 +1,7 @@
 import subprocess
 import json
-from git import Repo, exc
+from git import Repo
+from git.exc import InvalidGitRepositoryError
 from pathlib import Path
 import dotenv
 import os
@@ -17,7 +18,7 @@ cwd = Path.cwd().resolve()
 try:
     git_wd = cwd
     repo = Repo(git_wd)
-except exc.InvalidGitRepositoryError:
+except InvalidGitRepositoryError:
     git_wd = cwd.parent
     repo = Repo(git_wd)
 assert not repo.bare

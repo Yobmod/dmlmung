@@ -20,7 +20,7 @@ def get_json_settings(json_file: pathType) -> Dict[str, Union[str, int]]:
         with open('./' + json_file, 'r') as jf:
             settings: Dict = json.load(jf)
     except Exception as e:
-        settings = dict(family='sans-serif', color='darkred', weight='normal', size=12)
+        settings = {'family': 'sans-serif', 'color': 'darkred', 'weight': 'normal', 'size': 12}
         print(e)
     return settings
 
@@ -222,7 +222,7 @@ def multi_bode_plot_save(fig,
 
     if len(axs) > 1:
         handles2, labels2 = axs[1].get_legend_handles_labels()
-        combined2 = sorted(zip(fig.voltages, labels2, handles2))
+        # combined2 = sorted(zip(fig.voltages, labels2, handles2))
         lines2 = axs[1].lines
         if color_map:
             sorted_lines2 = sorted(zip(fig.voltages, lines2, colors))
