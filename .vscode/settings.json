@@ -1,42 +1,45 @@
 {
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.fontSize": 16,
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "editor.suggestSelection": "first",
-  "explorer.confirmDelete": false,
-  "python.analysis.completeFunctionParens": true,
-  "python.analysis.extraPaths": [
-    ".\\src",
-    ".\\src_WA",
-    ".\\src\\data",
-    ".\\src\\dml_thread",
-    ".\\src\\tkcolorpicker",
-    ".\\src\\dmltk"
-  ],
-  "python.analysis.typeCheckingMode": "strict",
-  "python.envFile": "${workspaceFolder}\\.env",
-  "python.formatting.autopep8Args": [
-    "--max-line-length",
-    "120",
-    "--experimental"
-  ],
-  "python.formatting.blackArgs": ["--line-length", "120"],
-  "python.formatting.provider": "autopep8",
-  "python.languageServer": "Jedi",
-  "python.linting.enabled": true,
-  "python.linting.flake8Enabled": true,
-  "python.linting.mypyEnabled": true,
-  "python.linting.pycodestyleEnabled": false,
-  "python.linting.pydocstyleEnabled": false,
-  "python.linting.pylamaEnabled": false,
-  "python.linting.pylintEnabled": false,
-  "python.poetryPath": "poetry",
-  "python.pythonPath": ".venv\\Scripts\\python.exe",
-  "vsintellicode.features.python.deepLearning": "enabled",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "window.zoomLevel": 0,
-  "workbench.iconTheme": "material-icon-theme"
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.fontSize": 16,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.suggestSelection": "first",
+    "explorer.confirmDelete": false,
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.extraPaths": [
+        ".\\src",
+        ".\\src_WA",
+        ".\\src\\data",
+        ".\\src\\dml_thread",
+        ".\\src\\tkcolorpicker",
+        ".\\src\\dmltk"
+    ],
+    "python.analysis.typeCheckingMode": "strict",
+    "python.envFile": "${workspaceFolder}\\.env",
+    "python.formatting.autopep8Args": [
+        "--max-line-length",
+        "120",
+        "--experimental"
+    ],
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "120"
+    ],
+    "python.formatting.provider": "autopep8",
+    "python.languageServer": "Jedi",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.pycodestyleEnabled": false,
+    "python.linting.pydocstyleEnabled": false,
+    "python.linting.pylamaEnabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.poetryPath": "poetry",
+    "python.pythonPath": "C:\\dev\\dmlmung\\.venv\r\n",
+    "vsintellicode.features.python.deepLearning": "enabled",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "window.zoomLevel": 0,
+    "workbench.iconTheme": "material-icon-theme"
 }
