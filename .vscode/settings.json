@@ -37,7 +37,7 @@
     "python.linting.pylamaEnabled": false,
     "python.linting.pylintEnabled": false,
     "python.poetryPath": "poetry",
-    "python.pythonPath": "C:\\dev\\dmlmung\\.venv\r\n",
+    "python.pythonPath": "C:\\dev\\srimpy\\.venv\r\n",
     "vsintellicode.features.python.deepLearning": "enabled",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "window.zoomLevel": 0,
