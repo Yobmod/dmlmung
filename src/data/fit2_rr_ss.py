@@ -121,6 +121,8 @@ class FittedMultiData():
         v_dict = {d.voltage: d for d in self.data}
         return [FittedMultiData(v_dict[k]) for k in v_dict]
 
+# class ImpedanceFitter():
+
 
 def fit(data_dir, filename, plot: str = ""):
 
@@ -136,7 +138,7 @@ def fit(data_dir, filename, plot: str = ""):
     f = freq[:, 0]
     Z = np.array(real_imped + 1j * -imag_imped, dtype=np.complex)[:, 0]
 
-    circuit_str_5a = 'R0-p(R1,CPE1-p(R2,CPE2))'
+    circuit_str_5a = 'R0-p(R1,CPE1)-p(R2,CPE2)'
 
     R0_guesses = [6850]
     R1_guesses = [1E7, 1E6, 1E8]
@@ -166,9 +168,9 @@ def fit(data_dir, filename, plot: str = ""):
         # print(params.voltage, initial_guess)
         num_remaining -= 1
         circuit = CustomCircuit(circuit=circuit_str_5a, initial_guess=initial_guess)
-        circuit.fit(f, Z, global_opt=False, bounds=(
+        circuit.fit(f, Z, global_opt=True, bounds=(
             # R0        R1      C1     CPP1         R2      C2      CPP2      R3    C3      CPP3"
-            [6800,      0,       1E-9,      0.78,      0,    0,      0.78],
+            [6800,      0,       1E-9,      0.8,      0,    0,      0.8],
             [7000,      np.inf,  1E-6,         1, np.inf,    1E-5,    1]
         ))
 
@@ -188,15 +190,14 @@ def fit(data_dir, filename, plot: str = ""):
         variance_im = sum((Im_Z-Im_Z.mean())**2) / (len(Im_Z)-1)    # Variance
         Chi_square_im = sum(((Im_Z-Im_Z_fit)**2)/variance_im)
 
-        Zsq = np.sqrt(abs(Re_Z**2 + Im_Z**2))
-        Zsq_fit = np.sqrt(abs(Re_Z_fit**2 + Im_Z_fit**2))
+        Zsq = abs(Z)
+        Zsq_fit = abs(Z_fit)
         variance = sum((Zsq-Zsq.mean())**2) / (len(Z)-1)    # Variance
         Chi_square = sum(((Zsq-Zsq_fit)**2) / variance)
-        chi_square_diag = sqrt(Chi_square_re**2 + Chi_square_im**2)
 
         Chi_sq = Chi_square
         reduced_Chi_sq = Chi_square/dof     # Reduced Chi squared
-        std_err = np.sqrt(reduced_Chi_sq) * 100
+        std_err = np.sqrt(Chi_sq) * 100
         fitted_dict[tuple(initial_guess)] = (fitted_params, Chi_sq,
                                              Chi_square_re, f, Z, Z_fit, circuit_str_5a, params.voltage)
 
@@ -227,7 +228,7 @@ def multi_fit(data_dir: str, plot: str = "both", output_dir: str = "") -> Fitted
     group_fitted = {}
     group_fitted_list = []
 
-    for filepath in list(data_path.glob('*.csv'))[9:]:
+    for filepath in list(data_path.glob('*.csv'))[0:]:
         filename = str(filepath.name)
         array = open_file_numpy(data_dir, filename)
         data = get_data_numpy(array)
@@ -266,7 +267,7 @@ def multi_fit(data_dir: str, plot: str = "both", output_dir: str = "") -> Fitted
                 fontsize=12)
 
             chi_str = f"{chi2_loop}".replace('.', '_')
-            plt.savefig(Rf'{output_path}\\2R_p\{voltage}_chi_{chi_str}_{circuit_str}.png',
+            plt.savefig(Rf'{output_path}\\2R_ss\{voltage}_chi_{chi_str}_{circuit_str}.png',
                         bbox_inches='tight', dpi=500, transparent=True)
 
             if i in (0, number_printed) and plot in ("best", "both"):
