@@ -6,6 +6,7 @@ import os
 import json
 import numpy as np
 import matplotlib
+from matplotlib import figure
 matplotlib.use('TkAgg')
 
 # from typing import Tuple  # , override, get_type_hints
@@ -39,9 +40,9 @@ def save_json_settings(json_file: pathType, setting_dict: Mapping) -> None:
 
 
 def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output_dir: str = None,
-                 settings: Optional[Mapping] = None) -> None:
+                 settings: Optional[Dict[str, Union[str, int]]] = None) -> None:
     """"""
-
+    settings = settings or {}
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     # ax2 = ax1.twiny()
@@ -49,7 +50,7 @@ def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output
     ax1.plot(x_var, y_var)
     xmin, xmax = plt.xlim()     # pylint: disable=W0612
 
-    (filename_strip, solv, elec, ref_elec, work_elec) = params
+    (filename_strip, solv, elec, ref_elec, work_elec, _voltage) = params
     expt_vars = f"WE = {work_elec} \nRE = {ref_elec} \nElectrolyte = {elec} \nSolvent = {solv}"
     plt.title(
         f"CV of {work_elec} in {elec} ({solv}) vs {ref_elec} reference", y=1.05)
@@ -73,7 +74,7 @@ def make_cv_plot(x_var: np.ndarray, y_var: np.ndarray, params: paramsTup, output
 
 def make_nyquist_plot(
         imped_imag: np.ndarray, imped_real: np.ndarray, params: paramsTup, output_dir: pathType = None,
-        settings: Optional[Mapping] = None) -> None:
+        settings: Optional[Dict] = None) -> None:
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
 
@@ -132,7 +133,7 @@ def make_bode_plot(freq_log: np.ndarray, imped_log: np.ndarray, phase: np.ndarra
     # plt.show()
 
 
-def multi_bode_axes(settings: Mapping[str, Union[str, int]], y_axes: str = "both") -> matplotlib.figure.Figure:
+def multi_bode_axes(settings: Dict[str, Union[str, int]], y_axes: str = "both") -> figure.Figure:
     """"""
 
     fig = plt.figure()

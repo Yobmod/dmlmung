@@ -4,7 +4,7 @@ from pathlib import Path
 # cimport numpy as cnp
 import csv
 # import cython
-from typing import Tuple
+from typing import Tuple, Union
 from typing import Optional as Opt
 from my_types import pathType, simpDict, paramsTup
 
@@ -13,7 +13,7 @@ import plot
 
 # @cython.ccall
 # @cython.returns(cnp.ndarray[np.float64_t])
-def open_file_numpy(data_dir: str, filename: str):
+def open_file_numpy(data_dir: str, filename: str) -> Union[np.ndarray, None]:
     """ """
     file = Path(data_dir) / filename
     print(file)
@@ -88,7 +88,7 @@ def get_data_numpy(data_array: np.ndarray):
 
 
 # @cython.cfunc
-def get_params(data_dir: str, filename: Path):  # Tuple[str, str, str, str, str]:
+def get_params(data_dir: str, filename: Union[str, Path]):  # Tuple[str, str, str, str, str]:
     """"""
     voltage = get_voltage(data_dir, filename)
     # print(voltage)
@@ -247,7 +247,7 @@ Tr + Rs = -0.0556Ti2 + 3.9333Ti - 56.051
         for f in frequencies:
             for c in c_range:
                 for r in r_range:
-                    if r / [1 + (f x R x C)2]) + Rs = 
+                    if r / [1 + (f x R x C)2]) + Rs =
                     0.0556 x((f x R2 x C) / [1 + (f x R x C)2])2 + 3.9333 x(f x R2 x C) / [1 + (f x R x C)2] - 56.05:
                         break
     """
