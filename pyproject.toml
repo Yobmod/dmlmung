@@ -27,7 +27,7 @@ attrs = "*"
 
 # if data
 # pandas = "*"
-numpy = "1.19.3" # {git = "https://github.com/numpy/numpy.git", branch="master"}
+numpy = "1.21.0" # {git = "https://github.com/numpy/numpy.git", branch="master"}
 matplotlib = "*"  # bring numpy, pillow
 # seaborn = "*"
 # pandas-alive = "*"
